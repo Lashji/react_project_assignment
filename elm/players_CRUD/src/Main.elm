@@ -53,7 +53,6 @@ update msg model =
             {model| newPlayer = createPlayer (getNextIndex model) name } 
             
         AddPlayer ->
-            Debug.log "add"
             {model | 
             players = model.newPlayer :: model.players,
             newPlayer = initPlayer 0
