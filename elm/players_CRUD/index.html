@@ -4458,7 +4458,6 @@ var $author$project$Main$initPlayer = function (id) {
 	return A3($author$project$Main$Player, id, '', false);
 };
 var $author$project$Main$init = {
-	inputString: '',
 	newPlayer: $author$project$Main$initPlayer(0),
 	players: _List_Nil
 };
@@ -5216,6 +5215,9 @@ var $author$project$Main$deletePlayerFromList = F2(
 			},
 			model.players);
 	});
+var $author$project$Main$getNextIndex = function (model) {
+	return $elm$core$List$length(model.players);
+};
 var $elm$core$Debug$log = _Debug_log;
 var $author$project$Main$updatePlayerInlist = F3(
 	function (model, id, status) {
@@ -5231,48 +5233,39 @@ var $author$project$Main$update = F2(
 		switch (msg.$) {
 			case 'SetName':
 				var name = msg.a;
-				return A2(
-					$elm$core$Debug$log,
-					'SetName',
-					_Utils_update(
-						model,
-						{inputString: name}));
+				return _Utils_update(
+					model,
+					{
+						newPlayer: A2(
+							$author$project$Main$createPlayer,
+							$author$project$Main$getNextIndex(model),
+							name)
+					});
 			case 'AddPlayer':
 				return A2(
 					$elm$core$Debug$log,
-					'Add',
+					'add',
 					_Utils_update(
 						model,
 						{
-							players: A2(
-								$elm$core$List$cons,
-								A2(
-									$author$project$Main$createPlayer,
-									$elm$core$List$length(model.players),
-									model.inputString),
-								model.players)
+							newPlayer: $author$project$Main$initPlayer(0),
+							players: A2($elm$core$List$cons, model.newPlayer, model.players)
 						}));
 			case 'DeletePlayer':
 				var id = msg.a;
-				return A2(
-					$elm$core$Debug$log,
-					'Delete',
-					_Utils_update(
-						model,
-						{
-							players: A2($author$project$Main$deletePlayerFromList, model, id)
-						}));
+				return _Utils_update(
+					model,
+					{
+						players: A2($author$project$Main$deletePlayerFromList, model, id)
+					});
 			default:
 				var id = msg.a;
 				var status = msg.b;
-				return A2(
-					$elm$core$Debug$log,
-					'Modify',
-					_Utils_update(
-						model,
-						{
-							players: A3($author$project$Main$updatePlayerInlist, model, id, status)
-						}));
+				return _Utils_update(
+					model,
+					{
+						players: A3($author$project$Main$updatePlayerInlist, model, id, status)
+					});
 		}
 	});
 var $author$project$Main$AddPlayer = {$: 'AddPlayer'};
@@ -5385,8 +5378,8 @@ var $author$project$Main$addPlayerForm = function (model) {
 						$elm$html$Html$Attributes$required(true),
 						$elm$html$Html$Attributes$type_('text'),
 						$elm$html$Html$Attributes$id('input-player'),
+						$elm$html$Html$Attributes$value(model.newPlayer.name),
 						$elm$html$Html$Attributes$placeholder('Player name'),
-						$elm$html$Html$Attributes$value(model.inputString),
 						$elm$html$Html$Events$onInput($author$project$Main$SetName)
 					]),
 				_List_Nil),

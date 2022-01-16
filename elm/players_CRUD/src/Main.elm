@@ -6,6 +6,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onCheck, onClick, onInput, onSubmit)
 import Set exposing (Set)
 import List exposing (append)
+import Html.Keyed
 
 
 initPlayer : Int -> Player
@@ -26,7 +27,6 @@ type alias Player =
 type alias Model =
     { players : List Player
     , newPlayer : Player
-    , inputString : String
     }
 
 
@@ -42,7 +42,7 @@ init : Model
 init =
     { players = []
     , newPlayer = initPlayer 0
-    , inputString = ""
+
     }
 
 update : Msg -> Model -> Model
@@ -50,22 +50,25 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         SetName name ->
-            Debug.log "SetName"
-           {model | inputString = name}
-
+            {model| newPlayer = createPlayer (getNextIndex model) name } 
+            
         AddPlayer ->
-            Debug.log "Add"
-           {model | players = createPlayer (List.length model.players) model.inputString :: model.players} 
-           
+            Debug.log "add"
+            {model | 
+            players = model.newPlayer :: model.players,
+            newPlayer = initPlayer 0
+            }
         DeletePlayer id ->
-            Debug.log "Delete"
-
             {model | players = deletePlayerFromList model id}
 
         ModifyPlayer id status ->
-            Debug.log "Modify"
             {model | players = updatePlayerInlist model id status} 
 
+
+getNextIndex : Model -> Int
+getNextIndex model = List.length model.players 
+    
+        
 
 deletePlayerFromList : Model -> Int -> List Player
 deletePlayerFromList model id = 
@@ -90,7 +93,7 @@ view model =
         h1 [] [text "Players CRUD"]
         , h1 [] [text "Manage hockey players with Elm"]
         , hr [] []
-        , addPlayerForm model
+        , addPlayerForm model 
         , div [] [
             h1 [] [text "Players List:"]
             , playerList model.players
@@ -99,9 +102,9 @@ view model =
 
 
 
-addPlayerForm :Model -> Html Msg
-addPlayerForm model = Html.form [action "", onSubmit AddPlayer, id "submit-player"] [
-            input [required True, type_ "text", id "input-player", placeholder "Player name", value model.inputString, onInput SetName] []
+addPlayerForm : Model ->  Html Msg
+addPlayerForm model = Html.form [action "", onSubmit AddPlayer , id "submit-player"] [
+            input [required True, type_ "text", id "input-player", value model.newPlayer.name , placeholder "Player name", onInput SetName] []
             , button [type_ "submit", id "btn-add"  ] [text "Add"]
         ]
 
