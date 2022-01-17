@@ -7,7 +7,7 @@ This backend is shared between all the exercises.
 **This stage needs to be performed only once and you can skip this stage if the backend is already installed**
 
 ```
-npm run install
+npm install
 ```
 
 

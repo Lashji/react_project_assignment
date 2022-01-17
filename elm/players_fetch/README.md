@@ -9,7 +9,7 @@ at the root of the repository.
    - **this stage needs to be performed only once**
    - **you can skip this stage if the backend is already installed**
    - change working directory to `backend`
-   - inside `backend` directory run `npm run install`
+   - inside `backend` directory run `npm install`
 
 2. Starting the backend server
    - change working directory to `backend`

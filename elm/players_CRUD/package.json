@@ -8,7 +8,7 @@
   "scripts": {
     "test": "elm-test",
     "dev": "chokidar '**/*.elm' -c 'npm run compile' --initial",
-    "compile": "elm make src/Main.elm --optimize --output=index.js"
+    "compile": "elm make src/Main.elm --output=index.js"
   },
   "keywords": [],
   "author": "",
