@@ -34,6 +34,32 @@ type Msg
     | DeletePlayer Int
     | FetchPlayers (Result Http.Error (List Player))
 
+createPlayer: Int -> String -> Player
+createPlayer id name  = 
+    Player id name False
+
+    
+getNextIndex : Model -> Int
+getNextIndex model = List.length model.players + 1
+    
+        
+
+deletePlayerFromList : Model -> Int -> List Player
+deletePlayerFromList model id = 
+    model.players 
+    |> List.filter(\player -> 
+        player.id /= id
+    )
+
+updatePlayerInlist : Model -> Int -> Bool -> List Player
+updatePlayerInlist model id status =
+    model.players 
+     |> List.map(\player -> 
+         if player.id == id then 
+            Player player.id player.name status
+        else 
+            player
+    ) 
 
 playerDecoder : Decoder Player
 playerDecoder =
@@ -76,25 +102,52 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SetName word ->
-            ( model, Cmd.none )
-
+        SetName name ->
+            ({model| newPlayer = createPlayer (getNextIndex model) name}, Cmd.none )
+            
         AddPlayer ->
-            ( model, Cmd.none )
-
+            ({model | 
+                players =model.players ++ List.singleton model.newPlayer ,
+                newPlayer = createPlayer (getNextIndex model) ""
+            }, Cmd.none) 
+            
         DeletePlayer id ->
-            ( model, Cmd.none )
+            ({model | players = deletePlayerFromList model id}, Cmd.none )
 
         ModifyPlayer id status ->
-            ( model, Cmd.none )
+            ({model | players = updatePlayerInlist model id status}, Cmd.none) 
 
         FetchPlayers data ->
-            ( model, Cmd.none )
-
+            case data of
+                Ok d ->
+                    Debug.log "da"
+                    ({ model | players = d} , Cmd.none )
+                Err e -> 
+                    (model, Cmd.none) 
 
 view : Model -> Html Msg
 view model =
-    p [] [ text "Elm Exercise: Players Fetch" ]
+    let 
+        playerComponent player = div [] [
+                                div [class "player-name"] [text player.name]
+                                , input [class "player-status", type_ "checkbox", checked player.isActive, onCheck (ModifyPlayer player.id)] []
+                                , br [][]
+                                , button [class "btn-delete", onClick (DeletePlayer player.id)] [text "Delete" ]
+                            ]
+
+        playerList players = ol [id "players-list"] (List.map(\p -> li [id ("player-" ++ String.fromInt p.id)] [playerComponent p]) players)
+
+        addPlayerForm  = Html.form [onSubmit AddPlayer , id "submit-player"] [
+            input [required True, type_ "text", id "input-player", value model.newPlayer.name , placeholder "Player name", onInput SetName] []
+            , button [type_ "submit", id "btn-add"  ] [text "Add"]]
+
+    in 
+        div []
+        [
+            addPlayerForm
+            ,playerList model.players
+        ]
+
 
 
 main : Program () Model Msg
