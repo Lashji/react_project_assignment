@@ -148,6 +148,7 @@ view model =
             ,addPlayerForm
             ,h1 [] [text "Players List"]
             ,playerList model.players
+            ,statusText
         ]
 
 
