@@ -109,17 +109,15 @@ addPlayerForm model = Html.form [onSubmit AddPlayer , id "submit-player"] [
 
 playerList : List Player -> Html Msg
 playerList players = 
-    ol [id "players-list"] (List.map(\p -> li [] [playerComponent p]) players)
+    ol [id "players-list"] (List.map(\p -> li [id ("player-" ++ String.fromInt p.id)] [playerComponent p]) players)
 
 playerComponent : Player -> Html Msg
 playerComponent player = 
     div [] [
-        span [] [text (player.name ++ "-" ++ String.fromInt player.id)]
-        , div [class "player-name"] [ 
-            input [class "player-status", type_ "checkbox", checked player.isActive, onCheck (ModifyPlayer player.id)] []
-            , span [] [text "active"]
-        ]
-        , button [class "btn-delete", onClick (DeletePlayer player.id)] [text ("Delete - " ++ String.fromInt player.id)]
+        div [class "player-name"] [text player.name]
+        , input [class "player-status", type_ "checkbox", checked player.isActive, onCheck (ModifyPlayer player.id)] []
+        , br [][]
+        , button [class "btn-delete", onClick (DeletePlayer player.id)] [text "Delete" ]
     ]
 
 main : Program () Model Msg

@@ -5218,7 +5218,6 @@ var $author$project$Main$deletePlayerFromList = F2(
 var $author$project$Main$getNextIndex = function (model) {
 	return $elm$core$List$length(model.players);
 };
-var $elm$core$Debug$log = _Debug_log;
 var $elm$core$List$singleton = function (value) {
 	return _List_fromArray(
 		[value]);
@@ -5246,20 +5245,17 @@ var $author$project$Main$update = F2(
 							name)
 					});
 			case 'AddPlayer':
-				return A2(
-					$elm$core$Debug$log,
-					'',
-					_Utils_update(
-						model,
-						{
-							newPlayer: A2(
-								$author$project$Main$createPlayer,
-								$author$project$Main$getNextIndex(model),
-								''),
-							players: _Utils_ap(
-								model.players,
-								$elm$core$List$singleton(model.newPlayer))
-						}));
+				return _Utils_update(
+					model,
+					{
+						newPlayer: A2(
+							$author$project$Main$createPlayer,
+							$author$project$Main$getNextIndex(model),
+							''),
+						players: _Utils_ap(
+							model.players,
+							$elm$core$List$singleton(model.newPlayer))
+					});
 			case 'DeletePlayer':
 				var id = msg.a;
 				return _Utils_update(
@@ -5410,6 +5406,7 @@ var $author$project$Main$ModifyPlayer = F2(
 	function (a, b) {
 		return {$: 'ModifyPlayer', a: a, b: b};
 	});
+var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$Attributes$checked = $elm$html$Html$Attributes$boolProperty('checked');
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -5440,21 +5437,12 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $elm$html$Html$span = _VirtualDom_node('span');
 var $author$project$Main$playerComponent = function (player) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
-				A2(
-				$elm$html$Html$span,
-				_List_Nil,
-				_List_fromArray(
-					[
-						$elm$html$Html$text(
-						player.name + ('-' + $elm$core$String$fromInt(player.id)))
-					])),
 				A2(
 				$elm$html$Html$div,
 				_List_fromArray(
@@ -5463,25 +5451,20 @@ var $author$project$Main$playerComponent = function (player) {
 					]),
 				_List_fromArray(
 					[
-						A2(
-						$elm$html$Html$input,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('player-status'),
-								$elm$html$Html$Attributes$type_('checkbox'),
-								$elm$html$Html$Attributes$checked(player.isActive),
-								$elm$html$Html$Events$onCheck(
-								$author$project$Main$ModifyPlayer(player.id))
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$span,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('active')
-							]))
+						$elm$html$Html$text(player.name)
 					])),
+				A2(
+				$elm$html$Html$input,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('player-status'),
+						$elm$html$Html$Attributes$type_('checkbox'),
+						$elm$html$Html$Attributes$checked(player.isActive),
+						$elm$html$Html$Events$onCheck(
+						$author$project$Main$ModifyPlayer(player.id))
+					]),
+				_List_Nil),
+				A2($elm$html$Html$br, _List_Nil, _List_Nil),
 				A2(
 				$elm$html$Html$button,
 				_List_fromArray(
@@ -5492,8 +5475,7 @@ var $author$project$Main$playerComponent = function (player) {
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text(
-						'Delete - ' + $elm$core$String$fromInt(player.id))
+						$elm$html$Html$text('Delete')
 					]))
 			]));
 };
@@ -5509,7 +5491,11 @@ var $author$project$Main$playerList = function (players) {
 			function (p) {
 				return A2(
 					$elm$html$Html$li,
-					_List_Nil,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$id(
+							'player-' + $elm$core$String$fromInt(p.id))
+						]),
 					_List_fromArray(
 						[
 							$author$project$Main$playerComponent(p)
