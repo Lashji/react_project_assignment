@@ -119,11 +119,10 @@ update msg model =
 
         FetchPlayers data ->
             case data of
-                Ok d ->
-                    Debug.log "da"
-                    ({ model | players = d} , Cmd.none )
+                Ok arr ->
+                    ({ model | players = arr , reqStatus = ""} , Cmd.none )
                 Err e -> 
-                    (model, Cmd.none) 
+                    ({model | reqStatus = "An error has occurred!!!"}, Cmd.none) 
 
 view : Model -> Html Msg
 view model =
@@ -141,10 +140,13 @@ view model =
             input [required True, type_ "text", id "input-player", value model.newPlayer.name , placeholder "Player name", onInput SetName] []
             , button [type_ "submit", id "btn-add"  ] [text "Add"]]
 
+        statusText = div [id "request-status"][text model.reqStatus]
     in 
         div []
         [
-            addPlayerForm
+            h1 [] [text "Add Player"]
+            ,addPlayerForm
+            ,h1 [] [text "Players List"]
             ,playerList model.players
         ]
 
