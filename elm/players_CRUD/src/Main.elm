@@ -4,9 +4,8 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onCheck, onClick, onInput, onSubmit)
-import Set exposing (Set)
-import List exposing (append)
-import Html.Keyed
+
+
 
 
 initPlayer : Int -> Player
@@ -28,6 +27,7 @@ type alias Model =
     { players : List Player
     , newPlayer : Player
     }
+    
 
 
 type Msg
@@ -46,17 +46,17 @@ init =
     }
 
 update : Msg -> Model -> Model
-
 update msg model =
     case msg of
         SetName name ->
-            {model| newPlayer = createPlayer (getNextIndex model) name } 
+            {model| newPlayer = createPlayer (getNextIndex model) name} 
             
         AddPlayer ->
             {model | 
-            players = model.newPlayer :: model.players,
-            newPlayer = initPlayer 0
-            }
+                players =model.players ++ List.singleton model.newPlayer ,
+                newPlayer = createPlayer (getNextIndex model) ""
+            } 
+            
         DeletePlayer id ->
             {model | players = deletePlayerFromList model id}
 
@@ -102,7 +102,7 @@ view model =
 
 
 addPlayerForm : Model ->  Html Msg
-addPlayerForm model = Html.form [action "", onSubmit AddPlayer , id "submit-player"] [
+addPlayerForm model = Html.form [onSubmit AddPlayer , id "submit-player"] [
             input [required True, type_ "text", id "input-player", value model.newPlayer.name , placeholder "Player name", onInput SetName] []
             , button [type_ "submit", id "btn-add"  ] [text "Add"]
         ]
