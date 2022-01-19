@@ -14,6 +14,7 @@ import Html.Events exposing (onCheck, onClick, onInput, onSubmit)
 import Http
 import Json.Decode as Decode exposing (Decoder, field, map3)
 import Json.Encode as Encode
+import Maybe exposing (withDefault)
 
 
 type alias Player =
@@ -41,6 +42,50 @@ type Msg
     | DeletePlayerReq Int
     | DeletePlayer Int (Result Http.Error ())
 
+
+createPlayer: Int -> String -> Player
+createPlayer id name  = 
+    Player id name False
+
+getPlayerFromList : Int -> Model -> Player
+getPlayerFromList id model =  
+    let player = List.head (List.filter(\i -> i.id == id) model.players)
+    in
+     case player of
+        Just p -> p
+        Nothing -> initPlayer id 
+    
+getNextIndex : Model -> Int
+getNextIndex model = List.length model.players + 1
+    
+modifyPlayers : Player -> Model -> List Player
+modifyPlayers player model = 
+            model.players
+            |> List.map(\p -> 
+                if player.id == p.id then
+                    player
+                else 
+                    p
+            )
+
+
+
+deletePlayerFromList : Model -> Int -> List Player
+deletePlayerFromList model id = 
+    model.players 
+    |> List.filter(\player -> 
+        player.id /= id
+    )
+
+updatePlayerInlist : Model -> Int -> Bool -> List Player
+updatePlayerInlist model id status =
+    model.players 
+     |> List.map(\player -> 
+         if player.id == id then 
+            Player player.id player.name status
+        else 
+            player
+    ) 
 
 playerEncoder : Player -> Encode.Value
 playerEncoder player =
@@ -133,24 +178,38 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SetName word ->
-            ( model, Cmd.none )
-
+        SetName name ->
+            ({model| newPlayer = createPlayer (getNextIndex model) name}, Cmd.none )
+            
         FetchPlayers data ->
-            ( model, Cmd.none )
+             case data of
+                Ok arr ->
+                    ({ model | players = arr , reqStatus = ""} , Cmd.none )
+                Err e -> 
+                    ({model | reqStatus = "An error has occurred!!!"}, Cmd.none) 
 
         PostPlayerReq ->
-            ( model, Cmd.none )
+            (model, postPlayerReq model.baseUrl model.newPlayer)
 
-        AddPlayer data ->
-            ( model, Cmd.none )
+        AddPlayer data -> 
+            case data of
+                Ok p ->
+                    ({ model | players = model.players ++ List.singleton p, reqStatus = ""} , Cmd.none )
+                Err e -> 
+                    ({model | reqStatus = "An error has occurred!!!"}, Cmd.none) 
 
         PutPlayerReq id status ->
-            ( model, Cmd.none )
+            let player = (getPlayerFromList id model)
+            in
+            ( model,  putPlayerReq (model.baseUrl) (Player player.id player.name status) )
 
         ModifyPlayer data ->
-            ( model, Cmd.none )
-
+            case data of 
+                Ok p ->
+                    ({ model | players = modifyPlayers p model, reqStatus = ""} , Cmd.none )
+                Err e -> 
+                    ({model | reqStatus = "An error has occurred!!!"}, Cmd.none) 
+                
         DeletePlayerReq id ->
             ( model, Cmd.none )
 
@@ -160,7 +219,32 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    p [] [ text "Elm Exercise: Players CRUD2" ]
+      let 
+        playerComponent player = div [] [
+                                div [class "player-name"] [text player.name]
+                                , input [class "player-status", type_ "checkbox", checked player.isActive, onCheck (PutPlayerReq player.id) ] []
+                                , br [][]
+                                , button [class "btn-delete" ] [text "Delete" ]
+                            ]
+
+        playerList players = ol [id "players-list"] (List.map(\p -> li [id ("player-" ++ String.fromInt p.id)] [playerComponent p]) players)
+
+        addPlayerForm = Html.form [onSubmit PostPlayerReq , id "submit-player"] [
+            input [required True, type_ "text", id "input-player", value model.newPlayer.name , placeholder "Player name", onInput SetName] []
+            , button [type_ "submit", id "btn-add"  ] [text "Add"]]
+
+        statusText = div [id "request-status"][text model.reqStatus]
+    in 
+        div []
+        [
+            h1 [] [text "Add Player"]
+            ,addPlayerForm
+            ,h1 [] [text "Players List"]
+            ,playerList model.players
+            ,statusText
+        ]
+
+
 
 
 main : Program () Model Msg
