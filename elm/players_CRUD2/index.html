@@ -6167,9 +6167,6 @@ var $author$project$Main$createPlayer = F2(
 	function (id, name) {
 		return A3($author$project$Main$Player, id, name, false);
 	});
-var $author$project$Main$getNextIndex = function (model) {
-	return $elm$core$List$length(model.players) + 1;
-};
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -6181,6 +6178,64 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $author$project$Main$deletePlayerFromList = F2(
+	function (model, id) {
+		return A2(
+			$elm$core$List$filter,
+			function (player) {
+				return !_Utils_eq(player.id, id);
+			},
+			model.players);
+	});
+var $author$project$Main$DeletePlayer = F2(
+	function (a, b) {
+		return {$: 'DeletePlayer', a: a, b: b};
+	});
+var $elm$http$Http$expectBytesResponse = F2(
+	function (toMsg, toResult) {
+		return A3(
+			_Http_expect,
+			'arraybuffer',
+			_Http_toDataView,
+			A2($elm$core$Basics$composeR, toResult, toMsg));
+	});
+var $elm$http$Http$expectWhatever = function (toMsg) {
+	return A2(
+		$elm$http$Http$expectBytesResponse,
+		toMsg,
+		$elm$http$Http$resolve(
+			function (_v0) {
+				return $elm$core$Result$Ok(_Utils_Tuple0);
+			}));
+};
+var $elm$http$Http$Header = F2(
+	function (a, b) {
+		return {$: 'Header', a: a, b: b};
+	});
+var $elm$http$Http$header = $elm$http$Http$Header;
+var $author$project$Main$deletePlayerReq = F2(
+	function (url, id) {
+		return $elm$http$Http$request(
+			{
+				body: $elm$http$Http$emptyBody,
+				expect: $elm$http$Http$expectWhatever(
+					$author$project$Main$DeletePlayer(id)),
+				headers: _List_fromArray(
+					[
+						A2($elm$http$Http$header, 'Accept', '*/*')
+					]),
+				method: 'DELETE',
+				timeout: $elm$core$Maybe$Nothing,
+				tracker: $elm$core$Maybe$Nothing,
+				url: _Utils_ap(
+					url,
+					$elm$core$String$fromInt(id))
+			});
+	});
+var $author$project$Main$getNextIndex = function (model) {
+	return $elm$core$List$length(model.players) + 1;
+};
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -6274,11 +6329,6 @@ var $author$project$Main$postPlayerReq = F2(
 var $author$project$Main$ModifyPlayer = function (a) {
 	return {$: 'ModifyPlayer', a: a};
 };
-var $elm$http$Http$Header = F2(
-	function (a, b) {
-		return {$: 'Header', a: a, b: b};
-	});
-var $elm$http$Http$header = $elm$http$Http$Header;
 var $author$project$Main$putPlayerReq = F2(
 	function (url, player) {
 		return $elm$http$Http$request(
@@ -6392,13 +6442,35 @@ var $author$project$Main$update = F2(
 				}
 			case 'DeletePlayerReq':
 				var id = msg.a;
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				return _Utils_Tuple2(
+					model,
+					A2($author$project$Main$deletePlayerReq, model.baseUrl, id));
 			default:
 				var id = msg.a;
 				var data = msg.b;
-				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				if (data.$ === 'Ok') {
+					var p = data.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								players: A2($author$project$Main$deletePlayerFromList, model, id),
+								reqStatus: ''
+							}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					var e = data.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{reqStatus: 'An error has occurred!!!'}),
+						$elm$core$Platform$Cmd$none);
+				}
 		}
 	});
+var $author$project$Main$DeletePlayerReq = function (a) {
+	return {$: 'DeletePlayerReq', a: a};
+};
 var $author$project$Main$PostPlayerReq = {$: 'PostPlayerReq'};
 var $author$project$Main$PutPlayerReq = F2(
 	function (a, b) {
@@ -6457,6 +6529,12 @@ var $elm$html$Html$Events$onCheck = function (tagger) {
 		$elm$html$Html$Events$on,
 		'change',
 		A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetChecked));
+};
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
 };
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
@@ -6556,7 +6634,9 @@ var $author$project$Main$view = function (model) {
 					$elm$html$Html$button,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('btn-delete')
+							$elm$html$Html$Attributes$class('btn-delete'),
+							$elm$html$Html$Events$onClick(
+							$author$project$Main$DeletePlayerReq(player.id))
 						]),
 					_List_fromArray(
 						[

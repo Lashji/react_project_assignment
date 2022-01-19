@@ -211,10 +211,15 @@ update msg model =
                     ({model | reqStatus = "An error has occurred!!!"}, Cmd.none) 
                 
         DeletePlayerReq id ->
-            ( model, Cmd.none )
+            ( model, deletePlayerReq model.baseUrl id )
 
         DeletePlayer id data ->
-            ( model, Cmd.none )
+            case data of 
+                Ok p ->
+                    ({ model | players = deletePlayerFromList model id, reqStatus = ""} , Cmd.none )
+                Err e -> 
+                    ({model | reqStatus = "An error has occurred!!!"}, Cmd.none) 
+           
 
 
 view : Model -> Html Msg
@@ -224,7 +229,7 @@ view model =
                                 div [class "player-name"] [text player.name]
                                 , input [class "player-status", type_ "checkbox", checked player.isActive, onCheck (PutPlayerReq player.id) ] []
                                 , br [][]
-                                , button [class "btn-delete" ] [text "Delete" ]
+                                , button [class "btn-delete", onClick (DeletePlayerReq player.id)] [text "Delete" ]
                             ]
 
         playerList players = ol [id "players-list"] (List.map(\p -> li [id ("player-" ++ String.fromInt p.id)] [playerComponent p]) players)
