@@ -19,8 +19,9 @@ const template= `
   <div>
     <h3>Selected Player</h3>
     <div v-if="selectedPlayer !== null" id="selected-player">
-      <div id="player-name">{{selectedPlayer.name}}</div>
-      <div id="player-status">
+      <div class='player-id'>{{selectedPlayer.id}}</div>
+      <div class="player-name">{{selectedPlayer.name}}</div>
+      <div class="player-status">
         {{selectedPlayer.isActive ? "active" : "not active"}}
       </div>
     </div>
@@ -30,8 +31,56 @@ const template= `
 `
 
 const App = {
-//TODO: template, data and methods missing
+  template: template,
   created() {
     this.getPlayers();
+  },
+  data(){
+    let players = [] 
+
+    return {
+      players,
+      selectedPlayer : null
+      ,reqStatus : ""
+    }
+  },
+  methods: {
+    getPlayers(){
+      this.reqStatus = "Loading..."
+
+      fetch("http://localhost:3001/api/players")
+      .then(res => {
+        if (!res.ok)
+          this.reqStatus = "An error has occured!!!"
+        else 
+          return res.json()
+      }
+      )
+      .then(res => {
+        this.reqStatus = ""
+        this.players =  res
+      })
+    },
+    getPlayer(id){
+      this.reqStatus = "Loading..."
+
+      fetch(`http://localhost:3001/api/players/${id}`)
+      .then(res => {
+        if (!res.ok)
+          this.reqStatus = "An error has occured!!!"
+        else 
+          return res.json()
+      }
+      )
+      .then(res => {
+
+        if (!res.ok)
+          this.reqStatus = "An error has occured!!!"
+
+        this.selectedPlayer = res
+        this.reqStatus = ""
+      })
+
+    }
   },
 };
