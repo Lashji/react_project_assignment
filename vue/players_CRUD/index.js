@@ -61,7 +61,7 @@ const ShowPlayerComponent = {
       <div class="player-status">
         {{player.isActive ? "active" : "not active"}}
       </div>
-      <button id="delete-btn" @click="$emit('delete-player', player.id)">Delete</button>
+      <button class="delete-btn" @click="$emit('delete-player', player.id)">Delete</button>
       </div>
   </div>
   `
