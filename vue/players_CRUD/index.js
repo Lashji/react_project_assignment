@@ -61,17 +61,17 @@ const ShowPlayerComponent = {
       <div class="player-status">
         {{player.isActive ? "active" : "not active"}}
       </div>
+      </div>
       <button id="delete-btn" @click="$emit('delete-player', player.id)">Delete</button>
-    </div>
   </div>
   `
 };
 
 const RequestStatusComponent = {
   name: "request-status",
-  props: ["reqStatus"],
+  props: ["requestStatus"],
   template: `
-  <div id="request-status">{{reqStatus}}</div>
+  <div id="request-status">{{requestStatus}}</div>
   `
 };
 
@@ -81,7 +81,7 @@ const App = {
       <add-player @add-player="handleSubmit"></add-player>
       <list-players @player-clicked=getPlayer :players=players></list-players>
       <show-player @delete-player="deletePlayer" :player=player ></show-player>
-      <request-status :reqStatus=reqStatus></request-status>
+      <request-status :requestStatus=requestStatus></request-status>
     </div>
   `,
   methods: {
@@ -119,7 +119,7 @@ const App = {
         }
       ).then(res => {
           if (!res.ok)
-            this.reqStatus ="An error has occured!!!"
+            this.requestStatus ="An error has occured!!!"
             else {
             return res.json()
           }
@@ -131,16 +131,16 @@ const App = {
     },
     makeRequest(url, callback)
     {
-      this.reqStatus = "Loading..."
+      this.requestStatus = "Loading..."
       fetch(url)
       .then(res => {
         if (!res.ok)
-          this.reqStatus = "An error has occured!!!"
+          this.requestStatus = "An error has occured!!!"
         else 
           return res.json()
       })
       .then(res => {
-        this.reqStatus = ""
+        this.requestStatus = ""
         callback(res)
       })
     }
@@ -149,7 +149,7 @@ const App = {
     return {
       players: [],
       player: null,
-      reqStatus: ""
+      requestStatus: ""
     }
   },
   created() {
