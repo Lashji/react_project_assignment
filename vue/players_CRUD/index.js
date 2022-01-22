@@ -11,7 +11,7 @@ const AddPlayerComponent = {
   template: `
     <div>
       <form id="submit-player" action="" @submit.stop.prevent="$emit('add-player',inputVal)">
-        <input id="input-player" required="true" type="text" v-model:value="inputVal">
+        <input name="player-name" id="input-player" required="true" type="text" v-model:value="inputVal">
         <button id="add-btn"  type="submit">Add</button>
       </form>
     </div>
@@ -61,8 +61,8 @@ const ShowPlayerComponent = {
       <div class="player-status">
         {{player.isActive ? "active" : "not active"}}
       </div>
-      </div>
       <button id="delete-btn" @click="$emit('delete-player', player.id)">Delete</button>
+      </div>
   </div>
   `
 };
