@@ -2,35 +2,158 @@
 
 const AddPlayerComponent = {
   name: "add-player",
-  // TODO: Implement the <"add-player"> component here.
+  emits: ["add-player"],
+  data(){
+    return {
+      inputVal : ""
+    }
+  },
+  template: `
+    <div>
+      <form id="submit-player" action="" @submit.stop.prevent="$emit('add-player',inputVal)">
+        <input required="true" type="text" v-model:value="inputVal">
+        <button id="add-btn"  type="submit">Add</button>
+      </form>
+    </div>
+  `
 };
 
 const ListPlayersComponent = {
   name: "list-players",
-  // TODO: Implement the <list-players> component here.
+  props: ["players"],
+  emits: ["player-clicked"],
+  template: `
+   <div>
+    <h3>Players List</h3>
+    <ol id="players-list">
+      <list-player
+        v-for="player in players"
+        :key="player.id"
+        :id="'player-'+player.id"
+        :player="player"
+        @player-clicked="i => $emit('player-clicked', i)"
+      ></list-player>
+    </ol>
+  </div>
+  `
 };
 
 const ListPlayerComponent = {
   name: "list-player",
-  // TODO: Implement the <list-player> component here.
+  props: ["player"],
+  emits: ["player-clicked"],
+  template: `<li>
+        <a @click.stop.prevent="$emit('player-clicked', player.id)" href="#"
+          >{{player.name}}</a>
+      </li>
+  `
 };
 
 const ShowPlayerComponent = {
   name: "show-player",
-  // TODO: Implement the <show-player> component here.
+  props: ["player"],
+  emits: ["delete-player"],
+  template: `<div>
+    <h3>Selected Player</h3>
+    <div v-if="player !== null" id="selected-player">
+      <div class='player-id'>{{player.id}}</div>
+      <div class="player-name">{{player.name}}</div>
+      <div class="player-status">
+        {{player.isActive ? "active" : "not active"}}
+      </div>
+      <button @click="$emit('delete-player', player.id)">Delete</button>
+    </div>
+  </div>
+  `
 };
 
 const RequestStatusComponent = {
   name: "request-status",
-  // TODO: Implement the <request-status> component here.
+  props: ["reqStatus"],
+  template: `
+  <div id="request-status">{{reqStatus}}</div>
+  `
 };
 
 const App = {
   template: `
     <div>
-        <p>
-          // TODO: Implement the App component here.
-        </p>
+      <add-player @add-player="handleSubmit"></add-player>
+      <list-players @player-clicked=getPlayer :players=players></list-players>
+      <show-player @delete-player="deletePlayer" :player=player ></show-player>
+      <request-status :reqStatus=reqStatus></request-status>
     </div>
   `,
+  methods: {
+    getPlayers(){
+      console.log("getPlayers")
+      const url = "http://localhost:3001/api/players"
+      this.makeRequest(url, (res) => {
+        this.players = res
+      })
+    },
+    getPlayer(id)
+    {
+      this.makeRequest("http://localhost:3001/api/players/" + id, (res) => {
+        this.player = res
+      })
+
+    },
+    deletePlayer(id)
+    {
+      console.log("id:", id)
+
+      fetch(`http://localhost:3001/api/players/${id}`, {
+        method : "DELETE",
+      })
+
+    },
+    async handleSubmit(inputVal){
+      console.log("handleSubmit", inputVal)
+      const response = await  fetch("http://localhost:3001/api/players/", {
+          method : "POST",
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({name: inputVal, isActive: false})
+        }
+      ).then(res => {
+          if (!res.ok)
+            this.reqStatus ="An error has occured!!!"
+            else {
+            return res.json()
+          }
+        })
+        .then(res => {
+          console.log("response", res)
+          return res
+        })
+    },
+    makeRequest(url, callback)
+    {
+      this.reqStatus = "Loading..."
+      fetch(url)
+      .then(res => {
+        if (!res.ok)
+          this.reqStatus = "An error has occured!!!"
+        else 
+          return res.json()
+      })
+      .then(res => {
+        this.reqStatus = ""
+        callback(res)
+      })
+    }
+  },
+  data() {
+    return {
+      players: [],
+      player: null,
+      reqStatus: ""
+    }
+  },
+  created() {
+    console.log("list players")
+    this.getPlayers()
+  },
 };
