@@ -11,7 +11,7 @@ const AddPlayerComponent = {
   template: `
     <div>
       <form id="submit-player" action="" @submit.stop.prevent="$emit('add-player',inputVal)">
-        <input required="true" type="text" v-model:value="inputVal">
+        <input id="input-player" required="true" type="text" v-model:value="inputVal">
         <button id="add-btn"  type="submit">Add</button>
       </form>
     </div>
@@ -29,7 +29,6 @@ const ListPlayersComponent = {
       <list-player
         v-for="player in players"
         :key="player.id"
-        :id="'player-'+player.id"
         :player="player"
         @player-clicked="i => $emit('player-clicked', i)"
       ></list-player>
@@ -42,7 +41,8 @@ const ListPlayerComponent = {
   name: "list-player",
   props: ["player"],
   emits: ["player-clicked"],
-  template: `<li>
+  template: `<li :id="'player-'+player.id"
+>
         <a @click.stop.prevent="$emit('player-clicked', player.id)" href="#"
           >{{player.name}}</a>
       </li>
@@ -61,7 +61,7 @@ const ShowPlayerComponent = {
       <div class="player-status">
         {{player.isActive ? "active" : "not active"}}
       </div>
-      <button @click="$emit('delete-player', player.id)">Delete</button>
+      <button id="delete-btn" @click="$emit('delete-player', player.id)">Delete</button>
     </div>
   </div>
   `
