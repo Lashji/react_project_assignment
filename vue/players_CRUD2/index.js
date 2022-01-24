@@ -2,35 +2,299 @@
 
 const AuthUserComponent = {
   name: "auth-user",
-  // TODO: Implement the <auth-user> component here
+  props: ["mode", "isLoggedIn"],
+  emits: ["", "", ""],
+  computed: {
+      modeText: function() {
+
+        let str = "Go to "
+
+        if (this.mode === "logout")
+        {
+          str = "logout"
+        } else if (this.mode === 'login')
+        {
+          str += "register"
+        } else if (this.mode === 'register')
+        {
+          str += "login"
+        }
+        return str
+      } ,
+      
+      
+  },
+  methods: {
+    emitNextMode(){
+      
+      if (this.mode === 'logout'){
+        this.$emit('player-view-event', "login")
+      } else if (this.mode === 'login')
+      {
+          this.$emit('player-view-event', "register")
+        } else if (this.mode === 'register')
+        {
+          this.$emit('player-view-event', "login")
+        }
+      },
+      emitFormAction(e){
+        if (this.mode === 'login')
+        {
+          this.$emit("login", e)
+        } else if (this.mode ==='register') {
+          this.$emit("register", e)
+        }
+      }
+  },
+  template: `
+    <div>
+      <a @click="emitNextMode()" id="switch-link" href="#">{{modeText}}</a>
+      <div>
+        <form action="" @submit.stop.prevent="emitFormAction" v-if="!isLoggedIn" id="auth-form">
+          <input placeholder="username" required id="auth-username" />
+          <input placeholder="password" type="password" required id="auth-password" />
+          <button id="auth-btn" type="submit">{{mode}}</button>
+        </form>
+      </div>
+    </div>
+  `
 };
+
 
 const AddPlayerComponent = {
   name: "add-player",
-  // TODO: Implement the <"add-player"> component here.
+  emits: ["add-player"],
+  data(){
+    return {
+      inputVal : "",
+    }
+  },
+  template: `
+    <div>
+      <form id="submit-player" action="" @submit.stop.prevent="$emit('add-player',inputVal)">
+        <input name="player-name" id="input-player" required="true" type="text" v-model:value="inputVal">
+        <button id="add-btn"  type="submit">Add</button>
+      </form>
+    </div>
+  `
 };
 
 const ListPlayersComponent = {
   name: "list-players",
-  // TODO: Implement the <list-players> component here.
+  props: ["players"],
+  emits: ["player-clicked"],
+  template: `
+   <div>
+    <h3>Players List</h3>
+    <ol id="players-list">
+      <list-player
+        v-for="player in players"
+        :key="player.id"
+        :player="player"
+        @player-clicked="i => $emit('player-clicked', i)"
+      ></list-player>
+    </ol>
+  </div>
+  `
 };
 
 const ListPlayerComponent = {
   name: "list-player",
-  // TODO: Implement the <list-player> component here.
+  props: ["player"],
+  emits: ["player-clicked"],
+  template: `<li :id="'player-'+player.id"
+>
+        <a @click.stop.prevent="$emit('player-clicked', player.id)" href="#"
+          >{{player.name}}</a>
+      </li>
+  `
 };
 
 const ShowPlayerComponent = {
   name: "show-player",
-  // TODO: Implement the <show-player> component here.
+  props: ["player"],
+  emits: ["delete-player"],
+  template: `<div>
+    <h3>Selected Player</h3>
+    <div v-if="player !== null" id="selected-player">
+      <div class='player-id'>{{player.id}}</div>
+      <div class="player-name">{{player.name}}</div>
+      <div class="player-status">
+        {{player.isActive ? "active" : "not active"}}
+      </div>
+      <button class="delete-btn" @click="$emit('delete-player', player.id)">Delete</button>
+      </div>
+  </div>
+  `
 };
+
+const RequestStatusComponent = {
+  name: "request-status",
+  props: ["requestStatus"],
+  template: `
+  <div id="request-status">{{requestStatus}}</div>
+  `
+};
+
 
 const App = {
   template: `
     <div>
-        <p>
-          // TODO: Implement the App component here.
-        </p>
+      <auth-user :isLoggedIn="isLoggedIn" @logout="logout" @register="register" @login="login" @player-view-event="handleViewChange" :mode="mode"></auth-user>
+      <div v-if="isLoggedIn">
+        <add-player @add-player="handleSubmit"></add-player>
+        <list-players @player-clicked=getPlayer :players=players></list-players>
+        <show-player @delete-player="deletePlayer" :player=player ></show-player>
+        <request-status :requestStatus=requestStatus></request-status>
+      </div>
     </div>
   `,
+  methods: {
+    getPlayers(){
+      console.log("getPlayers")
+      const url = "http://localhost:3001/api/players"
+      this.makeRequest(url, (res) => {
+        this.players = res
+      })
+    },
+    getPlayer(id)
+    {
+      this.makeRequest("http://localhost:3001/api/players/" + id, (res) => {
+        this.player = res
+      })
+
+    },
+    deletePlayer(id)
+    {
+      fetch(`http://localhost:3001/api/players/${id}`, {
+        method : "DELETE",
+        headers: {
+          'Authorization': this.token,
+          "Content-type": 'application/json'
+        },
+      })
+    },
+    login(form){
+      const username = form.srcElement[0].value
+      const pw = form.srcElement[1].value
+      const token = `${username}:${pw}` 
+
+      const hash = btoa(token)
+
+      const basic =`Basic ${hash}`
+
+      this.token = basic
+      this.mode = "logout"
+
+      console.log("list players")
+      if (this.isLoggedIn)
+        this.getPlayers()
+
+    },
+    logout(){
+      console.log("logout");
+      this.token = ""
+      this.mode = "login"
+      this.players =  [],
+      this.player = null,
+      this.requestStatus = ""
+    },
+    register(form){
+      const username = form.srcElement[0].value
+      const pw = form.srcElement[1].value
+      const token = `${username}:${pw}` 
+
+      const hash = btoa(token)
+
+      const basic =`Basic ${hash}`
+
+      fetch("http://localhost:3001/api/users", {
+        method: "POST",
+        headers: {
+          'Authorization': basic,
+          "Content-type": 'application/json'
+        },
+        body: JSON.stringify({
+          username : username,
+          password : pw
+        })
+      }).then(res => {{
+
+        if (res.ok)
+          return res.json()
+
+        }}).then(res => {
+        console.log("res: ",res);
+          this.token = basic
+          this.getPlayers()
+
+      })
+
+    },
+    handleViewChange(newMode){
+      console.log("change mode", newMode)
+      this.mode = newMode
+      this.logout()
+    },
+    handleSubmit(inputVal){
+      console.log("handleSubmit", inputVal)
+      const response = fetch("http://localhost:3001/api/players/", {
+          method : "POST",
+          headers: {
+          'Authorization': this.token,
+          "Content-type": 'application/json'
+        },
+          body: JSON.stringify({name: inputVal, isActive: false})
+        }
+      ).then(res => {
+          if (!res.ok)
+            this.requestStatus ="An error has occured!!!"
+            else {
+            return res.json()
+          }
+        })
+        .then(res => {
+          console.log("response", res)
+          return res
+        })
+    },
+    makeRequest(url, callback)
+    {
+      this.requestStatus = "Loading..."
+      fetch(url,{
+      headers: {
+          'Authorization': this.token,
+          "Content-type": 'application/json'
+        },
+      })
+      .then(res => {
+        if (!res.ok)
+          this.requestStatus = "An error has occured!!!"
+        else 
+          return res.json()
+      })
+      .then(res => {
+        this.requestStatus = ""
+        callback(res)
+      })
+    }
+  },
+  data() {
+    return {
+      players: [],
+      player: null,
+      requestStatus: "",
+      mode: "login",
+      token: ""
+    }
+  },
+  computed: {
+    isLoggedIn()
+    {
+      return this.token !== "" 
+    },
+    },
+  created() {
+    
+  },
 };
