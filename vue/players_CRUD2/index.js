@@ -43,6 +43,7 @@ const AuthUserComponent = {
           this.$emit("login", e)
         } else if (this.mode ==='register') {
           this.$emit("register", e)
+          this.$emit("login", e)
         }
       }
   },
@@ -51,8 +52,8 @@ const AuthUserComponent = {
       <a @click="emitNextMode()" id="switch-link" href="#">{{modeText}}</a>
       <div>
         <form action="" @submit.stop.prevent="emitFormAction" v-if="!isLoggedIn" id="auth-form">
-          <input placeholder="username" required id="auth-username" />
-          <input placeholder="password" type="password" required id="auth-password" />
+          <input placeholder="username" required id="auth-username" type="text" />
+          <input placeholder="password" type="password" required id="auth-password"/>
           <button id="auth-btn" type="submit">{{mode}}</button>
         </form>
       </div>
@@ -234,7 +235,9 @@ const App = {
     handleViewChange(newMode){
       console.log("change mode", newMode)
       this.mode = newMode
-      this.logout()
+
+      if (this.mode === "login")
+        this.logout()
     },
     handleSubmit(inputVal){
       console.log("handleSubmit", inputVal)
