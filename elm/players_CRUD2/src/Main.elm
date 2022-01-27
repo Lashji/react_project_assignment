@@ -14,7 +14,7 @@ import Html.Events exposing (onCheck, onClick, onInput, onSubmit)
 import Http
 import Json.Decode as Decode exposing (Decoder, field, map3)
 import Json.Encode as Encode
-import Maybe exposing (withDefault)
+
 
 
 type alias Player =

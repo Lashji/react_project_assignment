@@ -2,60 +2,30 @@
 
 const AuthUserComponent = {
   name: "auth-user",
-  props: ["mode", "isLoggedIn"],
-  emits: ["", "", ""],
-  computed: {
-      modeText: function() {
-
-        let str = "Go to "
-
-        if (this.mode === "logout")
-        {
-          str = "logout"
-        } else if (this.mode === 'login')
-        {
-          str += "register"
-        } else if (this.mode === 'register')
-        {
-          str += "login"
-        }
-        return str
-      } ,
-      
-      
-  },
-  methods: {
-    emitNextMode(){
-      
-      if (this.mode === 'logout'){
-        this.$emit('player-view-event', "login")
-      } else if (this.mode === 'login')
-      {
-          this.$emit('player-view-event', "register")
-        } else if (this.mode === 'register')
-        {
-          this.$emit('player-view-event', "login")
-        }
-      },
-      emitFormAction(e){
-        if (this.mode === 'login')
-        {
-          this.$emit("login", e)
-        } else if (this.mode ==='register') {
-          this.$emit("register", e)
-          this.$emit("login", e)
-        }
-      }
-  },
+  props: ["loginView", "isLoggedIn"],
+  emits: ["login", "register", "logout", "change-view"],
   template: `
     <div>
-      <a @click="emitNextMode()" id="switch-link" href="#">{{modeText}}</a>
-      <div>
-        <form action="" @submit.stop.prevent="emitFormAction" v-if="!isLoggedIn" id="auth-form">
-          <input placeholder="username" required id="auth-username" type="text" />
-          <input placeholder="password" type="password" required id="auth-password"/>
-          <button id="auth-btn" type="submit">{{mode}}</button>
-        </form>
+      <div v-if="!isLoggedIn">
+        <div v-if="loginView">
+          <a @click="$emit('change-view', loginView)" id="switch-link" href="#">Go to register</a>
+            <form action="" @submit.stop.prevent="form => $emit('login', form)" id="auth-form">
+              <input placeholder="username" required id="auth-username" type="text" />
+              <input placeholder="password" type="password" required id="auth-password"/>
+            <button id="auth-btn" type="submit">login</button>
+          </form>
+        </div>
+        <div v-else>
+          <a @click="$emit('change-view', loginView)" id="switch-link" href="#">Go to login</a>
+          <form action="" @submit.stop.prevent="form => $emit('register', form)" id="auth-form">
+            <input placeholder="username" required id="auth-username" type="text" />
+            <input placeholder="password" type="password" required id="auth-password"/>
+          <button id="auth-btn" type="submit">register</button>
+          </form>
+        </div>
+      </div>
+      <div v-else>
+        <a @click="$emit('logout')" id="switch-link" href="#">logout</a>
       </div>
     </div>
   `
@@ -141,7 +111,7 @@ const RequestStatusComponent = {
 const App = {
   template: `
     <div>
-      <auth-user :isLoggedIn="isLoggedIn" @logout="logout" @register="register" @login="login" @player-view-event="handleViewChange" :mode="mode"></auth-user>
+      <auth-user :isLoggedIn="isLoggedIn" @logout="logout" @register="register" @login="login" @change-view="handleViewChange" :loginView="loginView"></auth-user>
       <div v-if="isLoggedIn">
         <add-player @add-player="handleSubmit"></add-player>
         <list-players @player-clicked=getPlayer :players=players></list-players>
@@ -173,46 +143,61 @@ const App = {
           'Authorization': this.token,
           "Content-type": 'application/json'
         },
-      })
+      }).then(res => {
+        if (!res.ok)
+            this.requestStatus ="An error has occured!!!"
+            else {
+            return res.json()
+          }
+      }).then(res => {
+        console.log("delete res=>" , res);
+        this.players = this.players.filter(i => i.id !== res.id)
+        this.player = null;
+      }) 
     },
     login(form){
       const username = form.srcElement[0].value
       const pw = form.srcElement[1].value
+
       const token = `${username}:${pw}` 
-
       const hash = btoa(token)
+      const basicToken =`Basic ${hash}`
 
-      const basic =`Basic ${hash}`
+      this.token = basicToken
+      this.loginView = true
 
-      this.token = basic
-      this.mode = "logout"
-
-      console.log("list players")
-      if (this.isLoggedIn)
-        this.getPlayers()
+      this.isLoggedIn = true
+        
+      this.getPlayers()
 
     },
     logout(){
-      console.log("logout");
       this.token = ""
-      this.mode = "login"
+      this.loginView = true
       this.players =  [],
       this.player = null,
       this.requestStatus = ""
+      this.isLoggedIn = false
+    },
+    loginFromRegister(token){
+      this.token = token
+      this.isLoggedIn = true
+      this.getPlayers()
     },
     register(form){
+      console.log("register");
       const username = form.srcElement[0].value
       const pw = form.srcElement[1].value
       const token = `${username}:${pw}` 
 
       const hash = btoa(token)
 
-      const basic =`Basic ${hash}`
+      const basicToken =`Basic ${hash}`
 
       fetch("http://localhost:3001/api/users", {
         method: "POST",
         headers: {
-          'Authorization': basic,
+          'Authorization': basicToken,
           "Content-type": 'application/json'
         },
         body: JSON.stringify({
@@ -221,23 +206,19 @@ const App = {
         })
       }).then(res => {{
 
-        if (res.ok)
+        if (!res.ok)
+          this.requestStatus ="An error has occured!!!"
+        else {
           return res.json()
-
+      }
         }}).then(res => {
-        console.log("res: ",res);
-          this.token = basic
-          this.getPlayers()
-
+          this.loginFromRegister(basicToken)
       })
 
     },
-    handleViewChange(newMode){
-      console.log("change mode", newMode)
-      this.mode = newMode
-
-      if (this.mode === "login")
-        this.logout()
+    handleViewChange(view){
+      console.log("change loginView", view)
+      this.loginView = !view
     },
     handleSubmit(inputVal){
       console.log("handleSubmit", inputVal)
@@ -258,7 +239,7 @@ const App = {
         })
         .then(res => {
           console.log("response", res)
-          return res
+          this.players.push(res)
         })
     },
     makeRequest(url, callback)
@@ -287,16 +268,12 @@ const App = {
       players: [],
       player: null,
       requestStatus: "",
-      mode: "login",
-      token: ""
+      loginView: true,
+      token: "",
+      isLoggedIn: false
     }
   },
-  computed: {
-    isLoggedIn()
-    {
-      return this.token !== "" 
-    },
-    },
+
   created() {
     
   },
