@@ -2,30 +2,30 @@
 
 const AuthUserComponent = {
   name: "auth-user",
-  props: ["loginView", "isLoggedIn"],
+  props: ["registerView", "isLoggedIn"],
   emits: ["login", "register", "logout", "change-view"],
   template: `
     <div>
       <div v-if="!isLoggedIn">
-        <div v-if="loginView">
-          <a @click="$emit('change-view', loginView)" id="switch-link" href="#">Go to register</a>
-            <form action="" @submit.stop.prevent="form => $emit('login', form)" id="auth-form">
+        <div v-if="registerView">
+          <a @click="$emit('change-view', registerView)" id="switch-link" href="#">Go to login</a>
+            <form action="" @submit.stop.prevent="form => $emit('register', form)" id="auth-form">
               <input placeholder="username" required id="auth-username" type="text" />
               <input placeholder="password" type="password" required id="auth-password"/>
-            <button id="auth-btn" type="submit">login</button>
+            <button id="auth-btn" type="submit">Register</button>
           </form>
         </div>
         <div v-else>
-          <a @click="$emit('change-view', loginView)" id="switch-link" href="#">Go to login</a>
-          <form action="" @submit.stop.prevent="form => $emit('register', form)" id="auth-form">
+          <a @click="$emit('change-view', registerView)" id="switch-link" href="#">Go to register</a>
+          <form action="" @submit.stop.prevent="form => $emit('login', form)" id="auth-form">
             <input placeholder="username" required id="auth-username" type="text" />
             <input placeholder="password" type="password" required id="auth-password"/>
-          <button id="auth-btn" type="submit">register</button>
+          <button id="auth-btn" type="submit">login</button>
           </form>
         </div>
       </div>
       <div v-else>
-        <a @click="$emit('logout')" id="switch-link" href="#">logout</a>
+        <a @click="$emit('logout')" id="switch-link" href="#">Logout</a>
       </div>
     </div>
   `
@@ -111,7 +111,7 @@ const RequestStatusComponent = {
 const App = {
   template: `
     <div>
-      <auth-user :isLoggedIn="isLoggedIn" @logout="logout" @register="register" @login="login" @change-view="handleViewChange" :loginView="loginView"></auth-user>
+      <auth-user :isLoggedIn="isLoggedIn" @logout="logout" @register="register" @login="login" @change-view="handleViewChange" :registerView="registerView"></auth-user>
       <div v-if="isLoggedIn">
         <add-player @add-player="handleSubmit"></add-player>
         <list-players @player-clicked=getPlayer :players=players></list-players>
@@ -164,7 +164,7 @@ const App = {
       const basicToken =`Basic ${hash}`
 
       this.token = basicToken
-      this.loginView = true
+      this.registerView = true
 
       this.isLoggedIn = true
         
@@ -173,7 +173,7 @@ const App = {
     },
     logout(){
       this.token = ""
-      this.loginView = true
+      this.registerView = true
       this.players =  [],
       this.player = null,
       this.requestStatus = ""
@@ -217,8 +217,8 @@ const App = {
 
     },
     handleViewChange(view){
-      console.log("change loginView", view)
-      this.loginView = !view
+
+      this.registerView = !view
     },
     handleSubmit(inputVal){
       console.log("handleSubmit", inputVal)
@@ -268,7 +268,7 @@ const App = {
       players: [],
       player: null,
       requestStatus: "",
-      loginView: true,
+      registerView: true,
       token: "",
       isLoggedIn: false
     }
