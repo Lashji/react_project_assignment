@@ -2,26 +2,66 @@
 
 const AuthUserComponent = {
   name: "auth-user",
-  props: ["registerView", "isLoggedIn"],
-  emits: ["login", "register", "logout", "change-view"],
+  props: ["loginView", "isLoggedIn"],
+  emits: ["login", "register", "logout"],
+  data(){
+    console.log(this.username, this.password);
+    return {
+      username: "",
+      password: "",
+      state: "login"
+    }
+  },
+  methods: {
+    handleSubmit(){
+      if (this.state === 'register')
+      {
+        this.$emit('register', {username: this.username,password: this.password})
+      } else {
+        this.$emit('login', {username: this.username,password: this.password})
+      }
+    },
+    changeState(){
+      if (this.state === 'register')
+      {
+        this.state = 'login'
+      }  else {
+        this.state = "register"
+      }
+    }
+  },
+  computed: {
+    linkText(){
+      if (this.state === 'login')
+      {
+        return "Go to register"
+      } else if (this.state === 'register') {
+        return "Go to login"
+      } else {
+        return "logout"
+      }
+    },
+    buttonText(){
+      if (this.state === 'register')
+      {
+        return "register"
+      } else{
+        return "login"
+      }
+    }
+
+
+  },
   template: `
     <div>
       <div v-if="!isLoggedIn">
-        <div v-if="registerView">
-          <a @click="$emit('change-view', registerView)" id="switch-link" href="#">Go to login</a>
-            <form action="" @submit.stop.prevent="form => $emit('register', form)" id="auth-form">
-              <input placeholder="username" required id="auth-username" type="text" />
-              <input placeholder="password" type="password" required id="auth-password"/>
-            <button id="auth-btn" type="submit">Register</button>
-          </form>
-        </div>
-        <div v-else>
-          <a @click="$emit('change-view', registerView)" id="switch-link" href="#">Go to register</a>
-          <form action="" @submit.stop.prevent="form => $emit('login', form)" id="auth-form">
-            <input placeholder="username" required id="auth-username" type="text" />
-            <input placeholder="password" type="password" required id="auth-password"/>
-          <button id="auth-btn" type="submit">login</button>
-          </form>
+        <div >
+            <a @click="e => changeState()" id="switch-link" href="#">{{linkText}}</a>
+            <form action="" @submit.stop.prevent="handleSubmit" id="auth-form">
+              <input placeholder="username" required id="auth-username" type="text" v-model="username" />
+              <input placeholder="password" type="password" required id="auth-password" v-model="password"/>
+              <button id="auth-btn" type="submit">{{buttonText}}</button>
+            </form>
         </div>
       </div>
       <div v-else>
@@ -111,7 +151,7 @@ const RequestStatusComponent = {
 const App = {
   template: `
     <div>
-      <auth-user :isLoggedIn="isLoggedIn" @logout="logout" @register="register" @login="login" @change-view="handleViewChange" :registerView="registerView"></auth-user>
+      <auth-user :isLoggedIn="isLoggedIn" @logout="logout" @register="register" @login="login"></auth-user>
       <div v-if="isLoggedIn">
         <add-player @add-player="handleSubmit"></add-player>
         <list-players @player-clicked=getPlayer :players=players></list-players>
@@ -155,25 +195,16 @@ const App = {
         this.player = null;
       }) 
     },
-    login(form){
-      const username = form.srcElement[0].value
-      const pw = form.srcElement[1].value
-
-      const token = `${username}:${pw}` 
+    login({username, password}){
+      
+      const token = `${username}:${password}` 
       const hash = btoa(token)
-      const basicToken =`Basic ${hash}`
-
-      this.token = basicToken
-      this.registerView = true
-
+      this.token  =`Basic ${hash}`
       this.isLoggedIn = true
-        
-      this.getPlayers()
 
     },
     logout(){
       this.token = ""
-      this.registerView = true
       this.players =  [],
       this.player = null,
       this.requestStatus = ""
@@ -184,11 +215,10 @@ const App = {
       this.isLoggedIn = true
       this.getPlayers()
     },
-    register(form){
-      console.log("register");
-      const username = form.srcElement[0].value
-      const pw = form.srcElement[1].value
-      const token = `${username}:${pw}` 
+    register({username, password}){
+      console.log("register", username, password);
+     
+      const token = `${username}:${password}` 
 
       const hash = btoa(token)
 
@@ -202,7 +232,7 @@ const App = {
         },
         body: JSON.stringify({
           username : username,
-          password : pw
+          password : password
         })
       }).then(res => {{
 
@@ -215,10 +245,6 @@ const App = {
           this.loginFromRegister(basicToken)
       })
 
-    },
-    handleViewChange(view){
-
-      this.registerView = !view
     },
     handleSubmit(inputVal){
       console.log("handleSubmit", inputVal)
@@ -268,7 +294,6 @@ const App = {
       players: [],
       player: null,
       requestStatus: "",
-      registerView: true,
       token: "",
       isLoggedIn: false
     }
