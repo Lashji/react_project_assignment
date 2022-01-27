@@ -50,7 +50,6 @@ const AuthUserComponent = {
       }
     }
 
-
   },
   template: `
     <div>
@@ -201,7 +200,7 @@ const App = {
       const hash = btoa(token)
       this.token  =`Basic ${hash}`
       this.isLoggedIn = true
-
+      this.getPlayers()
     },
     logout(){
       this.token = ""
@@ -213,7 +212,7 @@ const App = {
     loginFromRegister(token){
       this.token = token
       this.isLoggedIn = true
-      this.getPlayers()
+      
     },
     register({username, password}){
       console.log("register", username, password);
@@ -234,21 +233,21 @@ const App = {
           username : username,
           password : password
         })
-      }).then(res => {{
+      }).then(res => {
 
         if (!res.ok)
           this.requestStatus ="An error has occured!!!"
         else {
-          return res.json()
-      }
-        }}).then(res => {
-          this.loginFromRegister(basicToken)
+          this.login({username, password})
+        }
       })
+      
+
 
     },
     handleSubmit(inputVal){
       console.log("handleSubmit", inputVal)
-      const response = fetch("http://localhost:3001/api/players/", {
+      fetch("http://localhost:3001/api/players", {
           method : "POST",
           headers: {
           'Authorization': this.token,
