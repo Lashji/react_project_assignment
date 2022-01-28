@@ -11,7 +11,12 @@ const requestStatus = {
 };
 
 const fetchPlayers = async (url) => {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-type": "application/json",
+    },
+  });
   let status = requestStatus.LOADING;
   if (!response.ok) {
     status = requestStatus.ERROR;
@@ -46,10 +51,15 @@ function App() {
     fetchData();
   }, []);
 
-  const fetchPlayer = async (e, url) => {
+  const onClick = async (e, url) => {
     e.preventDefault();
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
 
     let status = requestStatus.LOADING;
 
@@ -67,7 +77,7 @@ function App() {
 
   return (
     <div>
-      <PlayersList players={players} fetchPlayer={fetchPlayer}></PlayersList>
+      <PlayersList players={players} onClick={onClick}></PlayersList>
       <PlayerInfo
         handleDelete={handleDelete}
         player={selectedPlayer}
