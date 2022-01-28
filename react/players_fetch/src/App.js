@@ -29,22 +29,22 @@ const handleDelete = () => {
 };
 
 function App() {
-  const [selectedPlayer, setSelectedPlayer] = useState({});
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [players, setPlayers] = useState([]);
   const [status, setStatus] = useState(requestStatus.LOADING);
 
-  const playersUrl = "http://localhost:3001/api/players";
+  const playersUrl = "/api/players/";
 
-  // useEffect(() => {
-  const fetchData = async () => {
-    const { players, status } = await fetchPlayers(playersUrl);
+  useEffect(() => {
+    const fetchData = async () => {
+      const { players, status } = await fetchPlayers(playersUrl);
 
-    setPlayers(players);
-    setStatus(status);
-  };
+      setPlayers(players);
+      setStatus(status);
+    };
 
-  fetchData();
-  // }, []);
+    fetchData();
+  }, []);
 
   const fetchPlayer = async (e, url) => {
     e.preventDefault();

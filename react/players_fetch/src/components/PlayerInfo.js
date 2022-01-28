@@ -1,9 +1,15 @@
 export const PlayerInfo = ({ player, handleDelete }) => {
-    
-  return <div id="selected-player">
-    <h1>Selected Player</h1>
-    <div id="player-id">{player.id}</div>
-    <div id="player-name">{player.name}</div>
-    <div id="player-status">{player.active? "active": "not active"}</div>
-  </div>
+  let playerText = "";
+  if (player) {
+    playerText = player?.isActive ? "active" : "not active";
+  }
+
+  return (
+    <div id="selected-player">
+      <h1>Selected Player</h1>
+      <div className="player-id">{player?.id}</div>
+      <div className="player-name">{player?.name}</div>
+      <div className="player-status">{playerText}</div>
+    </div>
+  );
 };

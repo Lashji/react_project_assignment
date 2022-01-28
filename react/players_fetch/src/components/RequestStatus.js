@@ -1,3 +1,3 @@
 export const RequestStatus = ({ status }) => {
-  return <div class={"request-status"}>{ status}</div>;
+  return <div className={"request-status"}>{ status}</div>;
 };

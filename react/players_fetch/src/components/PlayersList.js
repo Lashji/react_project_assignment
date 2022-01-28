@@ -1,9 +1,9 @@
 import { PlayerLink } from './PlayerLink';
 
 export const PlayersList = ({ players, fetchPlayer }) => {
-
+  console.log("players", players);
   const playersList = players.map(p => {
-    return <li id={`player-${p.id}`}><PlayerLink onClick={fetchPlayer} url={`http://localhost:3001/api/players/${p.id}`} name={p.name} key={p.id} /></li>
+    return <li id={`player-${p.id}` } key={p.id}><PlayerLink onClick={fetchPlayer} url={`/api/players/${p.id}`} name={p.name}  /></li>
   })
   
   return <div>

@@ -7,7 +7,7 @@ import { players } from '../mocks/players';
 test('should fetch players from backend when first loaded', async () => {
   render(<App />);
   const listItems = await screen.findAllByRole('listitem');
-
+  
   expect(listItems.length).toEqual(players.length);
   listItems.forEach((item, i) => {
     expect(item.id).toEqual(`player-${players[i].id}`);
