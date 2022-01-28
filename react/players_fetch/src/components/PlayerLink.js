@@ -1,3 +1,3 @@
 export const PlayerLink = ({ name, onClick, url }) => {
-  return null;
+  return <a href="#" onClick={e => onClick(e, url)}>{name}</a>;
 };

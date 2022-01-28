@@ -1,16 +1,80 @@
-import './App.css';
-import { PlayerInfo } from './components/PlayerInfo';
-import { PlayersList } from './components/PlayersList';
-import { RequestStatus } from './components/RequestStatus';
+import "./App.css";
+import { PlayerInfo } from "./components/PlayerInfo";
+import { PlayersList } from "./components/PlayersList";
+import { RequestStatus } from "./components/RequestStatus";
+import { useState, useEffect } from "react";
 
 const requestStatus = {
-  LOADING: 'Loading...',
-  READY: '',
-  ERROR: 'An error has occurred!!!'
+  LOADING: "Loading...",
+  READY: "",
+  ERROR: "An error has occurred!!!",
 };
 
-function App () {
-  return null;
+const fetchPlayers = async (url) => {
+  const response = await fetch(url);
+  let status = requestStatus.LOADING;
+  if (!response.ok) {
+    status = requestStatus.ERROR;
+  } else {
+    status = requestStatus.READY;
+  }
+
+  const players = await response.json();
+
+  return { players, status };
+};
+
+const handleDelete = () => {
+  console.log("handleDelete");
+};
+
+function App() {
+  const [selectedPlayer, setSelectedPlayer] = useState({});
+  const [players, setPlayers] = useState([]);
+  const [status, setStatus] = useState(requestStatus.LOADING);
+
+  const playersUrl = "http://localhost:3001/api/players";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { players, status } = await fetchPlayers(playersUrl);
+
+      setPlayers(players);
+      setStatus(status);
+    };
+
+    fetchData();
+  }, []);
+
+  const fetchPlayer = async (e, url) => {
+    e.preventDefault();
+
+    const response = await fetch(url);
+
+    let status = requestStatus.LOADING;
+
+    if (!response.ok) {
+      status = requestStatus.ERROR;
+    } else {
+      status = requestStatus.READY;
+    }
+
+    const player = await response.json();
+
+    setSelectedPlayer(player);
+    setStatus(status);
+  };
+
+  return (
+    <div>
+      <PlayersList players={players} fetchPlayer={fetchPlayer}></PlayersList>
+      <PlayerInfo
+        handleDelete={handleDelete}
+        player={selectedPlayer}
+      ></PlayerInfo>
+      <RequestStatus status={status}></RequestStatus>
+    </div>
+  );
 }
 
 export default App;

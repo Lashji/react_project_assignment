@@ -1,3 +1,3 @@
 export const RequestStatus = ({ status }) => {
-  return null;
+  return <h1>{ status}</h1>;
 };
