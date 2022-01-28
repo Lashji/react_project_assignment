@@ -35,16 +35,16 @@ function App() {
 
   const playersUrl = "http://localhost:3001/api/players";
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { players, status } = await fetchPlayers(playersUrl);
+  // useEffect(() => {
+  const fetchData = async () => {
+    const { players, status } = await fetchPlayers(playersUrl);
 
-      setPlayers(players);
-      setStatus(status);
-    };
+    setPlayers(players);
+    setStatus(status);
+  };
 
-    fetchData();
-  }, []);
+  fetchData();
+  // }, []);
 
   const fetchPlayer = async (e, url) => {
     e.preventDefault();
