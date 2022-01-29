@@ -1,4 +1,6 @@
 export const PlayerInfo = ({ player }) => {
+  console.log("player", player);
+
   let playerText = "";
   if (player) {
     playerText = player?.isActive ? "active" : "not active";

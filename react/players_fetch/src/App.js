@@ -10,64 +10,76 @@ const requestStatus = {
   ERROR: "An error has occurred!!!",
 };
 
+let shouldFetch = true;
+
 function App() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [players, setPlayers] = useState(null);
   const [status, setStatus] = useState(requestStatus.LOADING);
 
-  useLayoutEffect(() => {
-    fetch("http://localhost:3001/api/players/",{
-      method: 'GET',
+  const fetchPlayers = async () => {
+    console.log("fetchPlayers");
+    setStatus(requestStatus.LOADING);
+
+    const response = await fetch("/api/players/", {
+      method: "GET",
       headers: {
-        'Content-type': 'application/json'
-      }
-    })
-      .then((res) => {
-        let status = requestStatus.LOADING;
-        if (!res.ok) {
-          console.log("res not ok", res.statusText);
-          status = requestStatus.ERROR;
-        } else {
-          status = requestStatus.READY;
-        }
+        "Content-type": "application/json",
+        Accept: "application/json",
+      },
+    });
 
-        setStatus(status);
+    if (!response.ok) {
+      console.log("res not ok", response.statusText);
+      setStatus(requestStatus.ERROR);
+    }
 
-        return res.json();
-      })
-      .then((res) => {
-        setPlayers(res);
-      });
+    const data = await response.json();
+
+    setStatus(requestStatus.READY);
+    setPlayers(data);
+    console.log("fetching done", data);
+  };
+
+  // if (shouldFetch) {
+  //   fetchPlayers();
+  //   shouldFetch = false;
+  // }
+
+  useEffect(() => {
+    fetchPlayers();
   }, []);
 
   const onClick = (e, url) => {
     e.preventDefault();
+    setStatus(requestStatus.LOADING);
 
-    fetch(url)
+    fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+      },
+    })
       .then((res) => {
-        let status = requestStatus.LOADING;
-
         if (!res.ok) {
-          status = requestStatus.ERROR;
-        } else {
-          status = requestStatus.READY;
+          setStatus(requestStatus.ERROR);
         }
-        setStatus(status);
 
         return res.json();
       })
       .then((res) => {
-        console.log("player", res);
         setSelectedPlayer(res);
+        setStatus(requestStatus.READY);
       });
   };
 
   return (
-    <div>
+    <>
       <PlayersList players={players} onClick={onClick}></PlayersList>
       <PlayerInfo player={selectedPlayer}></PlayerInfo>
       <RequestStatus status={status}></RequestStatus>
-    </div>
+    </>
   );
 }
 
