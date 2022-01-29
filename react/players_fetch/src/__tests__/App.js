@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, logRoles } from '@testing-library/react';
 import UserEvent from '@testing-library/user-event';
 import { server, rest } from '../mocks/server';
 import App from '../App';
@@ -7,7 +7,10 @@ import { players } from '../mocks/players';
 test('should fetch players from backend when first loaded', async () => {
   render(<App />);
   const listItems = await screen.findAllByRole('listitem');
-  
+  console.log("test")
+
+  listItems.forEach(i => logRoles(i))
+
   expect(listItems.length).toEqual(players.length);
   listItems.forEach((item, i) => {
     expect(item.id).toEqual(`player-${players[i].id}`);

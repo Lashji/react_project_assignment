@@ -1,4 +1,4 @@
-export const PlayerInfo = ({ player, handleDelete }) => {
+export const PlayerInfo = ({ player }) => {
   let playerText = "";
   if (player) {
     playerText = player?.isActive ? "active" : "not active";
