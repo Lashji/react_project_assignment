@@ -1,3 +1,4 @@
 export const RequestStatus = ({ status }) => {
-  return <div className={"request-status"}>{status}</div>;
+  console.log("status: ", status)
+  return <div className="request-status">{status}</div>;
 };

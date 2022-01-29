@@ -28,6 +28,8 @@ test('should fetch single player data from backend when link is clicked', async 
 });
 
 test('should show error status when request fails', async () => {
+  console.log("should show error status when request fails")
+
   server.use(
     rest.get('/api/players', (req, res, ctx) => {
       res(ctx.networkError('Network error'));

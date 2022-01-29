@@ -10,21 +10,17 @@ const requestStatus = {
   ERROR: "An error has occurred!!!",
 };
 
-let shouldFetch = true;
-
 function App() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [players, setPlayers] = useState(null);
-  const [status, setStatus] = useState(requestStatus.LOADING);
+  const [status, setStatus] = useState("An error has occurred!!!");
 
   const fetchPlayers = async () => {
-    console.log("fetchPlayers");
-    setStatus(requestStatus.LOADING);
+    // setStatus(requestStatus.LOADING);
 
-    const response = await fetch("/api/players/", {
+    const response = await fetch("/api/players", {
       method: "GET",
       headers: {
-        "Content-type": "application/json",
         Accept: "application/json",
       },
     });
@@ -32,19 +28,18 @@ function App() {
     if (!response.ok) {
       console.log("res not ok", response.statusText);
       setStatus(requestStatus.ERROR);
+      return;
+    } else {
+      console.log("res ok ");
     }
 
     const data = await response.json();
 
-    setStatus(requestStatus.READY);
     setPlayers(data);
-    console.log("fetching done", data);
-  };
+    setStatus(requestStatus.READY);
 
-  // if (shouldFetch) {
-  //   fetchPlayers();
-  //   shouldFetch = false;
-  // }
+    console.log("Players ", data);
+  };
 
   useEffect(() => {
     fetchPlayers();
@@ -52,27 +47,30 @@ function App() {
 
   const onClick = (e, url) => {
     e.preventDefault();
-    setStatus(requestStatus.LOADING);
+    // setStatus(requestStatus.LOADING);
 
     fetch(url, {
       method: "GET",
       headers: {
-        "Content-type": "application/json",
         Accept: "application/json",
       },
     })
       .then((res) => {
         if (!res.ok) {
+          console.log("res not ok", res.status);
           setStatus(requestStatus.ERROR);
+          return;
         }
 
         return res.json();
       })
       .then((res) => {
         setSelectedPlayer(res);
-        setStatus(requestStatus.READY);
+        // setStatus(requestStatus.READY);
       });
   };
+
+  console.log("LOADING APP", requestStatus.ERROR);
 
   return (
     <>
