@@ -17,109 +17,99 @@ function App() {
   const [status, setStatus] = useState("An error has occurred!!!");
 
   const handleDelete = async (id) => {
-    console.log("id: ", id);
-
-    const response = await fetch(`/api/players/${id}`, {
+    fetch(`/api/players/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
         Accept: "application/json",
       },
-    });
-
-    if (!response.ok) {
-      console.log("Error when trying to delete player");
-      setStatus(requestStatus.ERROR);
-      return;
-    }
-
-    await response.json();
-
-    const p = [...players].filter((i) => i.id !== id);
-    setPlayers(p);
-    setSelectedPlayer(null);
-    setStatus(requestStatus.READY);
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          const p = [...players].filter((i) => i.id !== id);
+          setPlayers(p);
+          setSelectedPlayer(null);
+          setStatus(requestStatus.READY);
+        },
+        (error) => {
+          setStatus(requestStatus.ERROR);
+        }
+      );
   };
 
   const fetchPlayers = async () => {
-    setStatus(requestStatus.LOADING);
-
-    const response = await fetch("/api/players", {
+    fetch("/api/players", {
       method: "GET",
       headers: {
         Accept: "application/json",
       },
-    });
+    })
+      .then((res) => res.json())
+      .then(
+        (res) => {
+          setPlayers(res);
+          setStatus(requestStatus.READY);
 
-    if (!response.ok) {
-      console.log("res not ok", response.statusText);
-      setStatus(requestStatus.ERROR);
-      return;
-    } else {
-      console.log("res ok ");
-    }
-
-    const data = await response.json();
-
-    setPlayers(data);
-    setStatus(requestStatus.READY);
-
-    console.log("Players ", data);
+          console.log("Players ", res);
+        },
+        (error) => {
+          setStatus(requestStatus.ERROR);
+        }
+      );
   };
 
   useEffect(() => {
+    console.log("fetch players useeffect");
     fetchPlayers();
   }, []);
 
   const onClick = (e, url) => {
     e.preventDefault();
-    setStatus(requestStatus.LOADING);
-
+    // setStatus(requestStatus.LOADING);
+    console.log("on click");
     fetch(url, {
       method: "GET",
       headers: {
         Accept: "application/json",
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          console.log("res not ok", res.status);
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setSelectedPlayer(result);
+          setStatus(requestStatus.READY);
+        },
+        (error) => {
           setStatus(requestStatus.ERROR);
-          return;
         }
-
-        return res.json();
-      })
-      .then((res) => {
-        setSelectedPlayer(res);
-        setStatus(requestStatus.READY);
-      });
+      );
   };
 
   const handleSubmit = async (e, user) => {
     e.preventDefault();
     console.log("USER", user);
 
-    const response = await fetch("/api/players", {
+    fetch("/api/players", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
         Accept: "application/json",
       },
       body: JSON.stringify(user),
-    });
-
-    if (!response.ok) {
-      console.log("req error");
-      setStatus(requestStatus.ERROR);
-      return;
-    }
-
-    const data = await response.json();
-
-    setPlayers([...players, data]);
-    setStatus(requestStatus.READY);
-    console.log("handleSubmit");
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setPlayers([...players, result]);
+          setStatus(requestStatus.READY);
+          console.log("handleSubmit");
+        },
+        (error) => {
+          console.log("req error");
+          setStatus(requestStatus.ERROR);
+        }
+      );
   };
 
   return (

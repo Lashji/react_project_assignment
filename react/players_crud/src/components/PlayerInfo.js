@@ -1,5 +1,4 @@
 export const PlayerInfo = ({ player, handleDelete}) => {
-  console.log("player", player);
 
   let playerText = "";
   let playerComponent =<></>
