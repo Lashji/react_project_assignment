@@ -1,6 +1,6 @@
 import { PlayerLink } from './PlayerLink';
 
-export const PlayersList = ({ players, onClick }) => {
+export const PlayersList = ({ players, selectedPlayer }) => {
   console.log("players", players);
 
   let playersList = <></>
@@ -8,7 +8,7 @@ export const PlayersList = ({ players, onClick }) => {
   if (players)
   {
       playersList = players.map(p => {
-        return <li id={`player-${p.id}` } key={p.id}><PlayerLink onClick={onClick} url={`/api/players/${p.id}`} name={p.name}  /></li>
+        return <li id={`player-${p.id}` } key={p.id}><PlayerLink onClick={selectedPlayer} url={`/api/players/${p.id}`} name={p.name}  /></li>
       })
   } 
   

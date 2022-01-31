@@ -45,8 +45,7 @@ function App() {
     fetchPlayers();
   }, []);
 
-  const onClick = (e, url) => {
-    e.preventDefault();
+  const onClick = (url, e) => {
     // setStatus(requestStatus.LOADING);
 
     fetch(url, {
@@ -70,11 +69,13 @@ function App() {
       });
   };
 
+
+  
   console.log("LOADING APP", requestStatus.ERROR);
 
   return (
     <>
-      <PlayersList players={players} onClick={onClick}></PlayersList>
+      <PlayersList players={players} selectedPlayer={onClick}></PlayersList>
       <PlayerInfo player={selectedPlayer}></PlayerInfo>
       <RequestStatus status={status}></RequestStatus>
     </>

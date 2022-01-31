@@ -1,4 +1,4 @@
-import { render, screen, logRoles } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import UserEvent from '@testing-library/user-event';
 import { PlayerLink } from '../PlayerLink';
 
@@ -17,20 +17,12 @@ test('href attribute matches url prop', () => {
 });
 
 test('onClick callback is called when link is clicked', () => {
-
-  console.log("onClick callback is called when link is clicked")
-
   const clickHandler = jest.fn();
   render(<PlayerLink url='#' onClick={clickHandler} name='Player Name' />);
 
   const linkElement = screen.getByRole('link');
   UserEvent.click(linkElement);
 
-  logRoles(linkElement)
-
-  console.log("clickhandler: ", clickHandler.mock.calls[0].isDefaultPrevented())
-
-  
   expect(clickHandler).toHaveBeenCalledTimes(1);
-  expect(clickHandler.mock.calls[1]).toBe('#');
+  expect(clickHandler.mock.calls[0][0]).toBe('#');
 });
