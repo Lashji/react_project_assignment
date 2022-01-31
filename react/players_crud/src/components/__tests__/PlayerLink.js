@@ -24,5 +24,5 @@ test('onClick callback is called when link is clicked', () => {
   UserEvent.click(linkElement);
 
   expect(clickHandler).toHaveBeenCalledTimes(1);
-  expect(clickHandler.mock.calls[0][1]).toBe('#');
+  expect(clickHandler.mock.calls[0][0]).toBe('#');
 });

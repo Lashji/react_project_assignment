@@ -64,10 +64,9 @@ function App() {
     fetchPlayers();
   }, []);
 
-  const onClick = (e, url) => {
+  const onClick = (url, e) => {
     e.preventDefault();
     // setStatus(requestStatus.LOADING);
-    console.log("on click");
     fetch(url, {
       method: "GET",
       headers: {
