@@ -78,7 +78,7 @@ function App() {
     fetchPlayers();
   }, [basicToken]);
 
-  const onClick = (e, url) => {
+  const onClick = (url, e ) => {
     e.preventDefault();
     fetch(url, {
       method: "GET",
@@ -161,11 +161,14 @@ function App() {
         },
         (error) => {
           setStatus(requestStatus.ERROR);
+          setIsLoggedIn(false);
         }
       );
   };
 
-  const handleAuth = (e, { username, password, mode }) => {
+  const handleAuth = (mode, e, { username, password }) => {
+    e.preventDefault();
+
     if (mode === "REGISTER") {
       register({ username, password });
     } else if (mode === "LOGIN") {

@@ -10,31 +10,38 @@ export const AuthForm = ({ handleSubmit }) => {
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState(MODES.LOGIN);
 
-  const modeText = mode === MODES.LOGIN ? "Login" : "Register";
-  const linkText = mode === MODES.LOGIN ? "Register" : "Login";
+  const modeText = mode === MODES.LOGIN ? "Log In" : "Register";
+  const linkText = mode === MODES.LOGIN ? "Register" : "Log In";
   const changeMode = () => {
     const newMode = mode === MODES.LOGIN ? MODES.REGISTER : MODES.LOGIN;
     setMode(newMode);
   };
 
+
+
   return (
     <div>
+      <h1>{modeText}</h1>
       <a href="#" onClick={(e) => changeMode()}>
-        Go to {linkText}
+        {linkText}
       </a>
       <form
         id="auth-form"
         action=""
-        onSubmit={(e) => handleSubmit(e, { username, password, mode })}
+        onSubmit={(e) =>
+          handleSubmit(mode === MODES.LOGIN, e, { username, password })
+        }
       >
         <input
+          required
           type="text"
           name="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          id="name"
+          id="username"
         />
         <input
+          required
           type="password"
           name="password"
           value={password}

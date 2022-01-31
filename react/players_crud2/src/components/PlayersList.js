@@ -1,7 +1,6 @@
 import { PlayerLink } from './PlayerLink';
 
 export const PlayersList = ({ players, selectedPlayer }) => {
-  // console.log("players", players);
 
   let playersList = <></>
 
