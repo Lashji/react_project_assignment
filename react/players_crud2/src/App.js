@@ -16,7 +16,7 @@ const requestStatus = {
 function App() {
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [players, setPlayers] = useState(null);
-  const [status, setStatus] = useState("An error has occurred!!!");
+  const [status, setStatus] = useState(requestStatus.READY);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [basicToken, setBasicToken] = useState("");
 
@@ -28,7 +28,11 @@ function App() {
     setBasicToken("");
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
+    setStatus(requestStatus.LOADING);
+
+    console.log("Handle delete", id);
+
     fetch(`/api/players/${id}`, {
       method: "DELETE",
       headers: {
@@ -40,18 +44,22 @@ function App() {
       .then((res) => res.json())
       .then(
         (result) => {
+          console.log("delete result");
+
           const p = [...players].filter((i) => i.id !== id);
           setPlayers(p);
           setSelectedPlayer(null);
           setStatus(requestStatus.READY);
         },
         (error) => {
+          console.log("delete errror", error);
           setStatus(requestStatus.ERROR);
         }
       );
   };
 
   const fetchPlayers = async () => {
+    setStatus(requestStatus.LOADING);
     fetch("/api/players", {
       method: "GET",
       headers: {
@@ -73,16 +81,16 @@ function App() {
       );
   };
 
-  useEffect(() => {
-    console.log("fetch players useeffect");
-    fetchPlayers();
-  }, [basicToken]);
-
-  const onClick = (url, e ) => {
+  const onClick = (url, e) => {
     e.preventDefault();
+
+    console.log("ONCLick");
+
+    setStatus(requestStatus.LOADING);
     fetch(url, {
       method: "GET",
       headers: {
+        "Content-type": "application/json",
         Accept: "application/json",
         Authorization: basicToken,
       },
@@ -90,10 +98,13 @@ function App() {
       .then((res) => res.json())
       .then(
         (result) => {
+          console.log("onClick result");
+
           setSelectedPlayer(result);
           setStatus(requestStatus.READY);
         },
         (error) => {
+          console.log("onClick error");
           setStatus(requestStatus.ERROR);
         }
       );
@@ -101,7 +112,9 @@ function App() {
 
   const handleSubmit = async (e, user) => {
     e.preventDefault();
-    console.log("USER", user);
+    setStatus(requestStatus.LOADING);
+
+    console.log("Submit Fetch");
 
     fetch("/api/players", {
       method: "POST",
@@ -115,9 +128,11 @@ function App() {
       .then((res) => res.json())
       .then(
         (result) => {
-          setPlayers([...players, result]);
+          const newPlayers = [...players, result];
+          console.log("Submit RESULT", newPlayers, result);
+
+          setPlayers(newPlayers);
           setStatus(requestStatus.READY);
-          console.log("handleSubmit");
         },
         (error) => {
           console.log("req error");
@@ -129,22 +144,57 @@ function App() {
   const login = ({ username, password }) => {
     const token = `${username}:${password}`;
     const hash = btoa(token);
-    setBasicToken(`Basic ${hash}`);
+    const btoken = `Basic ${hash}`;
+
+    console.log("Login", btoken);
+    setBasicToken(btoken);
     setIsLoggedIn(true);
-    fetchPlayers();
+
+    setStatus(requestStatus.LOADING);
+    fetch("/api/players", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+        Authorization: btoken,
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (res) => {
+          console.log("Players ", res);
+          if (!res.error) {
+            setPlayers(res);
+            setIsLoggedIn(true);
+            setStatus(requestStatus.READY);
+          } else {
+            handleLogout();
+            setStatus(requestStatus.ERROR);
+          }
+        },
+        (error) => {
+          console.log("Error", error);
+          handleLogout();
+          setStatus(requestStatus.ERROR);
+        }
+      );
   };
 
   const register = ({ username, password }) => {
     const token = `${username}:${password}`;
 
     const hash = btoa(token);
+    const btoken = `Basic ${hash}`;
 
-    const basicToken = `Basic ${hash}`;
+    setBasicToken(btoken);
+    setStatus(requestStatus.LOADING);
+
+    console.log("REgister");
 
     fetch("/api/users", {
       method: "POST",
       headers: {
-        Authorization: basicToken,
+        Authorization: btoken,
         "Content-type": "application/json",
         Accept: "application/json",
       },
@@ -156,23 +206,31 @@ function App() {
       .then((res) => res.json())
       .then(
         (res) => {
-          login({ username, password });
-          setStatus(requestStatus.READY);
+          console.log("resgister res", res);
+
+          if (!res.error) {
+            login({ username, password });
+            setStatus(requestStatus.READY);
+          } else {
+            setStatus(requestStatus.ERROR);
+          }
         },
         (error) => {
+          console.log("resgister error", error);
+
           setStatus(requestStatus.ERROR);
-          setIsLoggedIn(false);
         }
       );
   };
 
-  const handleAuth = (mode, e, { username, password }) => {
-    e.preventDefault();
+  const handleAuth = (mode, { username, password, event }) => {
+    // event.preventDefault();
+    console.log("mode", mode, username, password);
 
-    if (mode === "REGISTER") {
-      register({ username, password });
-    } else if (mode === "LOGIN") {
+    if (mode) {
       login({ username, password });
+    } else {
+      register({ username, password });
     }
   };
 
@@ -192,7 +250,12 @@ function App() {
       </div>
     );
   } else {
-    renderedComponent = <AuthForm handleSubmit={handleAuth} />;
+    renderedComponent = (
+      <div>
+        <AuthForm handleSubmit={handleAuth} />
+        <RequestStatus status={status}></RequestStatus>
+      </div>
+    );
   }
 
   return <div>{renderedComponent}</div>;

@@ -6,7 +6,7 @@ export const PlayersList = ({ players, selectedPlayer }) => {
 
   if (players)
   {
-      playersList = players.map(p => {
+      playersList = players?.map(p => {
         return <li id={`player-${p.id}` } key={p.id}><PlayerLink onClick={selectedPlayer} url={`/api/players/${p.id}`} name={p.name}  /></li>
       })
   } 

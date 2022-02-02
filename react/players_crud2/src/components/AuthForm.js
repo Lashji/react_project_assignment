@@ -17,7 +17,7 @@ export const AuthForm = ({ handleSubmit }) => {
     setMode(newMode);
   };
 
-
+  console.log("mode", mode, username, password);
 
   return (
     <div>
@@ -29,19 +29,23 @@ export const AuthForm = ({ handleSubmit }) => {
         id="auth-form"
         action=""
         onSubmit={(e) =>
-          handleSubmit(mode === MODES.LOGIN, e, { username, password })
+          handleSubmit(mode === MODES.LOGIN,{ username, password,event : e}, )
         }
       >
+        <label htmlFor="username">username</label>
         <input
           required
           type="text"
           name="username"
           value={username}
+          placeholder="username"
           onChange={(e) => setUsername(e.target.value)}
           id="username"
         />
+        <label htmlFor="password">password</label>
         <input
           required
+          placeholder="password"
           type="password"
           name="password"
           value={password}
