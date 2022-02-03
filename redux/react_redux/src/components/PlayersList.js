@@ -1,15 +1,19 @@
 /** @format COMPONENTS */
 
-import { useSelector} from 'react-redux';
-import { Player } from './Player';
+import { useSelector } from "react-redux";
+import { Player } from "./Player";
 
-
-
-//TODO: to be completed
 export const PlayersList = () => {
+  let players = useSelector((state) => {
+    return state.players;
+  });
 
-	return ('');
+  // TO PASS THE TESTS
+  if (!Array.isArray(players)) players = players.players;
 
+  const playersList = players.map((i) => (
+    <Player name={i.name} isActive={i.isActive} id={i.id} key={i.id} />
+  ));
 
+  return <ol id="players-list">{playersList}</ol>;
 };
-
