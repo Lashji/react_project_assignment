@@ -18,11 +18,13 @@ import { setStatus } from "../statusActions";
  * - setStatus-action with "ERROR" string as param
  * @return {Function} - thunk
  */
-export const deleteSelectedPlayer = (id) => {
-  return function (dispatch, getState) {
+export const deleteSelectedPlayer = () => {
+  return async function (dispatch, getState) {
     dispatch(setStatus(LOADING));
 
-    fetch(`/api/players/${id}`, {
+    const id = getState().selectedPlayer.id
+
+    await fetch(`/api/players/${id}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
@@ -32,9 +34,9 @@ export const deleteSelectedPlayer = (id) => {
       .then((res) => res.json())
       .then(
         (result) => {
+          dispatch(setStatus(READY));
           dispatch(removePlayer(id));
           dispatch(clearSelectedPlayer());
-          dispatch(setStatus(READY));
         },
         (error) => {
           dispatch(setStatus(ERROR));

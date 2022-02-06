@@ -16,9 +16,9 @@ import { setStatus } from "../statusActions";
  * @return {Function} - thunk
  */
 export const getPlayers = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch(setStatus(LOADING));
-    fetch("/api/players", {
+    await fetch("/api/players", {
       method: "GET",
       headers: {
         Accept: "application/json",

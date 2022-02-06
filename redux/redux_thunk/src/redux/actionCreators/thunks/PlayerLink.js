@@ -17,10 +17,10 @@ import { setStatus } from "../statusActions";
  * @return {Function} - thunk
  */
 export const getSelectedPlayer = (url) => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch(setStatus(LOADING));
 
-    fetch(url, {
+    await fetch(url, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -29,8 +29,8 @@ export const getSelectedPlayer = (url) => {
       .then((res) => res.json())
       .then(
         (result) => {
-          dispatch(setSelectedPlayer(result));
           dispatch(setStatus(READY));
+          dispatch(setSelectedPlayer(result));
         },
         (error) => {
           dispatch(setStatus(ERROR));

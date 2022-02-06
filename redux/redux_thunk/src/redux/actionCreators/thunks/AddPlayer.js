@@ -20,11 +20,11 @@ import { setStatus } from "../statusActions";
  * @return {Function} - thunk
  */
 export const postPlayer = (newPlayer) => {
-  return function (dispatch, getState) {
+  return async  function (dispatch, getState) {
     
     dispatch(setStatus(LOADING));
 
-    fetch("/api/players", {
+    await fetch("/api/players", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
