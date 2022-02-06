@@ -1,9 +1,9 @@
 /** @format THUNK*/
 
-import { ERROR, LOADING, READY } from '../../constants';
-import { removePlayer } from '../playersActions';
-import { clearSelectedPlayer } from '../selectedPlayerActions';
-import { setStatus } from '../statusActions';
+import { ERROR, LOADING, READY } from "../../constants";
+import { removePlayer } from "../playersActions";
+import { clearSelectedPlayer } from "../selectedPlayerActions";
+import { setStatus } from "../statusActions";
 
 /**
  * @description thunk for deleting the selected player.
@@ -18,4 +18,27 @@ import { setStatus } from '../statusActions';
  * - setStatus-action with "ERROR" string as param
  * @return {Function} - thunk
  */
-export const deleteSelectedPlayer = () => {};
+export const deleteSelectedPlayer = (id) => {
+  return function (dispatch, getState) {
+    dispatch(setStatus(LOADING));
+
+    fetch(`/api/players/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          dispatch(removePlayer(id));
+          dispatch(clearSelectedPlayer());
+          dispatch(setStatus(READY));
+        },
+        (error) => {
+          dispatch(setStatus(ERROR));
+        }
+      );
+  };
+};

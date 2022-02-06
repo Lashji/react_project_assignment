@@ -41,8 +41,12 @@ describe('Testing thunk action creators', () => {
 				addPlayer(expectedResponse),
 				clearSelectedPlayer(),
 			];
+
+			console.log("EXPECTED ID ", players.length+1);
+
 			await store.dispatch(postPlayer(expectedBody));
 			const actualActions = store.getActions();
+			console.log("ACTUAL ACTIONS", actualActions);
 			expect(actualActions).toEqual(expectedActions);
 		});
 		it('should dispatch setStatus(LOADING), setStatus(ERROR) action on unsuccessful requests', async () => {

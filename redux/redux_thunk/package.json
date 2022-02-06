@@ -19,7 +19,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "html-test": "npm test -- --reporters=jest-html-reporter --watchAll=false",
+    "html-test": "npm test -- --reporters=jest-html-reporter --watchAll=false --verbose",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

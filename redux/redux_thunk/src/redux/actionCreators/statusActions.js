@@ -9,4 +9,7 @@ import { SET_STATUS } from '../constants';
  * @param {String} status - The status that is to be stored in state
  * @return {Object} action
  */
-export const setStatus = (status) => ({});
+export const setStatus = (status) => ({
+    type: SET_STATUS,
+    payload: status
+});

@@ -1,8 +1,8 @@
 /** @format THUNK*/
 
-import { ERROR, LOADING, READY } from '../../constants';
-import { setSelectedPlayer } from '../selectedPlayerActions';
-import { setStatus } from '../statusActions';
+import { ERROR, LOADING, READY } from "../../constants";
+import { setSelectedPlayer } from "../selectedPlayerActions";
+import { setStatus } from "../statusActions";
 
 /**
  * @description thunk for getting the selected player.
@@ -16,4 +16,25 @@ import { setStatus } from '../statusActions';
  * @param {String} url -  url of the player to be selected
  * @return {Function} - thunk
  */
-export const getSelectedPlayer = (url) => {};
+export const getSelectedPlayer = (url) => {
+  return (dispatch, getState) => {
+    dispatch(setStatus(LOADING));
+
+    fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          dispatch(setSelectedPlayer(result));
+          dispatch(setStatus(READY));
+        },
+        (error) => {
+          dispatch(setStatus(ERROR));
+        }
+      );
+  };
+};
