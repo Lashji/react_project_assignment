@@ -31,8 +31,8 @@ describe("addPlayer", () => {
     );
     const tested_state = store.getState();
     const players = tested_state.players;
-    const ids = Object.keys(players);
-    const added_names = ids.map((id) => players[id]["name"]);
+    const ids = players.map(player=>player.id)
+    const added_names = ids.map(id=>players[id]["name"])
     expect(names.sort()).toEqual(added_names.sort());
   });
   it("adds correct activity values", () => {
@@ -46,9 +46,9 @@ describe("addPlayer", () => {
     );
     const tested_state = store.getState();
     const players = tested_state.players;
-    const ids = Object.keys(players);
-    const activities = ids.map((id) => players[id]["isActive"]);
-    expect(activities.every(isisActive)).toBe(true);
+    const ids = players.map(player=>player.id)
+    const activities = ids.map(id=>players[id]["isActive"])
+    expect(activities.every(isisActive)).toBe(true)
   });
 });
 
@@ -61,9 +61,9 @@ describe("removePlayers", () => {
     const players = tested_state.players;
     expect(Object.keys(players).length).toEqual(names.length);
 
-    const ids = Object.keys(players);
-    store.dispatch({ type: CONSTANT.REMOVE_PLAYER, payload: ids[0] });
-    const tested_state2 = store.getState();
+    const ids = players.map(player=>player.id)
+    store.dispatch({type: CONSTANT.REMOVE_PLAYER, payload:ids[0]})
+    const tested_state2 =  store.getState()
     const players2 = tested_state2.players;
     expect(Object.keys(players2).length).toEqual(names.length - 1);
   });
@@ -76,11 +76,9 @@ describe("removePlayers", () => {
     const players = tested_state.players;
     expect(Object.keys(players).length).toEqual(names.length);
 
-    const ids = Object.keys(players);
-    ids.forEach((id) =>
-      store.dispatch({ type: CONSTANT.REMOVE_PLAYER, payload: id })
-    );
-    const tested_state2 = store.getState();
+    const ids = players.map(player=>player.id)
+    ids.forEach(id=> store.dispatch({type: CONSTANT.REMOVE_PLAYER, payload:id}))
+    const tested_state2 =  store.getState()
     const players2 = tested_state2.players;
     expect(Object.keys(players2).length).toEqual(0);
   });
