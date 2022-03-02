@@ -2,8 +2,7 @@
 
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import MockAdapter from 'axios-mock-adapter';
-import axios from '../../../services/api';
+
 import {
 	addCartItem,
 	decrementCartItem,
@@ -21,13 +20,11 @@ import {
 import state from '../../utils/testStoreState';
 const { cart } = state;
 const product = cart[0].product;
-
-const mock = new MockAdapter(axios);
+const newCartItem = { product: { ...product }, quantity: 1 };
 
 let store;
 beforeEach(() => {
 	store = mockStore({});
-	mock.resetHandlers();
 	localStorage.setItem('cart', JSON.stringify(cart));
 });
 
@@ -45,7 +42,7 @@ describe('Testing thunk action creators', () => {
 				const expectedActions = [
 					{
 						type: ADD_CART_ITEM,
-						payload: product,
+						payload: newCartItem,
 					},
 					{
 						type: NEW_NOTIFICATION,
@@ -56,7 +53,7 @@ describe('Testing thunk action creators', () => {
 				window.localStorage.__proto__.setItem = jest.fn();
 
 				// assertions as usual:
-				store.dispatch(addCartItem(product));
+				store.dispatch(addCartItem(newCartItem));
 				try {
 					expect(localStorage.setItem).toHaveBeenCalled();
 				} catch (error) {
