@@ -154,5 +154,34 @@ export const register = (registerCreds) => {
 };
 
 const validate = (dispatch, creds) => {
+  if (creds.name.length < 4) {
+    dispatch({
+      type: NEW_NOTIFICATION,
+      payload: invalidAuth.name,
+    });
+    return false;
+  }
+
+  if (!creds.email.match(validEmailRegex)) {
+    dispatch({
+      type: NEW_NOTIFICATION,
+      payload: invalidAuth.email,
+    });
+    return false;
+  }
+  if (creds.password.length < 10) {
+    dispatch({
+      type: NEW_NOTIFICATION,
+      payload: invalidAuth.password,
+    });
+    return false;
+  }
+  if (creds.password !== creds.passwordConfirmation) {
+    dispatch({
+      type: NEW_NOTIFICATION,
+      payload: invalidAuth.passwordMismatch,
+    });
+    return false;
+  }
   return true;
 };
