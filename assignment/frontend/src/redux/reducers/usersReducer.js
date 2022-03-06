@@ -19,6 +19,32 @@ import {
  * @param {Object} action the action that calls the reducer.
  * @returns {Array} new state for products
  */
-const usersReducer = (state = [], action) => {};
+const usersReducer = (state = [], action) => {
+
+
+	switch(action.type)
+	{
+
+		case CLEAR_USERS: 
+			return []
+		
+		case GET_USER:
+			return []
+		
+		case GET_USERS:
+			return []
+
+		case REMOVE_USER: 
+			return []
+		
+		case UPDATE_USER:
+			return []
+		
+		default: 
+			return state
+	}
+	
+
+};
 
 export default usersReducer;

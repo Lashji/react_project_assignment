@@ -12,6 +12,26 @@ import { ADD_ORDER, CLEAR_ORDERS, GET_ORDER, GET_ORDERS } from '../constants';
  * @param {Object} action the action that calls the reducer.
  * @returns {Array} new state for orders
  */
-const ordersReducer = (state = [], action) => {};
+const ordersReducer = (state = [], action) => {
+
+  switch (action.type) {
+    
+    case ADD_ORDER: 
+      return []
+    
+    case CLEAR_ORDERS:
+      return []
+    
+    case GET_ORDER:
+      return []
+    
+    case GET_ORDERS:
+      return []
+
+    default: 
+      return state
+  }
+
+};
 
 export default ordersReducer;
