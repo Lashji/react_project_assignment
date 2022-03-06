@@ -2,7 +2,7 @@
 
 // NOTIFICATION ACTION CREATORS
 
-import { NEW_NOTIFICATION, REMOVE_NOTIFICATION } from '../constants';
+import { NEW_NOTIFICATION, REMOVE_NOTIFICATION } from "../constants";
 
 /**
  * @description Action creator that Dispatches a NEW_NOTIFICATION action to the frontends notification-state along with the payload that includes message.
@@ -12,10 +12,10 @@ import { NEW_NOTIFICATION, REMOVE_NOTIFICATION } from '../constants';
  * @return {Object} action
  */
 export const createNotification = (
-	newNotification = { message: '', isSuccess: false }
+  newNotification = { message: "", isSuccess: false }
 ) => ({
-	type: NEW_NOTIFICATION,
-	payload: newNotification
+  type: NEW_NOTIFICATION,
+  payload: newNotification,
 });
 
 /**
@@ -23,11 +23,9 @@ export const createNotification = (
  * @return {Object} action
  */
 export const removeNotification = () => {
-
-	setTimeout(() => {
-		return {
-			type: REMOVE_NOTIFICATION
-		}
-	}, 5000)
-
+  setTimeout(() => {
+    return {
+      type: REMOVE_NOTIFICATION,
+    };
+  }, 5000);
 };

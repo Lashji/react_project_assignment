@@ -31,7 +31,6 @@ const App = () => {
       <Notification />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-
         <Route
           path="/products"
           element={
@@ -40,19 +39,15 @@ const App = () => {
             </Auth>
           }
         />
-        {/* 
         <Route path="/products/:productId" element={<Auth />}>
           <Product />
         </Route>
-
         <Route path="/products/:productId/modify" element={<Auth />}>
           <ProductModifier />
         </Route>
-
         <Route path="/cart" element={<Auth />}>
           <Cart />
         </Route>
-
         <Route path="/orders" element={<Auth />}>
           <Orders />
         </Route>
@@ -73,8 +68,7 @@ const App = () => {
         </Route>
         <Route path="/users/:userId/modify" element={<Auth />}>
           <UserModifier />
-        </Route> */}
-
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

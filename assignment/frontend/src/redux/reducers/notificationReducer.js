@@ -1,6 +1,6 @@
 /** @format */
 
-import { NEW_NOTIFICATION, REMOVE_NOTIFICATION } from '../constants';
+import { NEW_NOTIFICATION, REMOVE_NOTIFICATION } from "../constants";
 
 /**
  * Implement notificationReducer that handles following cases:
@@ -11,18 +11,17 @@ import { NEW_NOTIFICATION, REMOVE_NOTIFICATION } from '../constants';
  * @returns {Object} new state for notification
  */
 const notificationReducer = (state = {}, action) => {
-
   switch (action.type) {
-    case NEW_NOTIFICATION: return action.payload
-      
-    case REMOVE_NOTIFICATION: {
-      return {}
-    }
-      
-    default: 
-      return state
-  }
+    case NEW_NOTIFICATION:
+      return action.payload;
 
+    case REMOVE_NOTIFICATION: {
+      return {};
+    }
+
+    default:
+      return state;
+  }
 };
 
 export default notificationReducer;

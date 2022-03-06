@@ -3,17 +3,17 @@
 // ORDER ACTION CREATORS
 
 import {
-	NEW_NOTIFICATION,
-	GET_ORDERS,
-	ADD_ORDER,
-	GET_ORDER,
-} from '../constants';
-import { emptyCart } from './cartActions';
+  NEW_NOTIFICATION,
+  GET_ORDERS,
+  ADD_ORDER,
+  GET_ORDER,
+} from "../constants";
+import { emptyCart } from "./cartActions";
 
-import axios from 'axios';
+import axios from "axios";
 
 const orderMsg = {
-	newOrder: 'New order made.',
+  newOrder: "New order made.",
 };
 /**
  * @description Action creator for getting a single order. Dispatches action with type GET_ORDER and payload of the fetched order if succesfull.
@@ -22,26 +22,21 @@ const orderMsg = {
  * @return {Function} - Thunk -> action
  */
 export const getOrder = (orderId) => {
+  return async (dispatch) => {
+    const res = await axios.get(`/api/orders/${orderId}`);
 
-	return async (dispatch) => {
-
-		const res = await axios.get(`/api/orders/${orderId}`)
-
-		if (res.status === 200)
-		{
-			dispatch({
-				type: GET_ORDER,
-				payload: res.data
-			})
-			
-		} else {
-			dispatch({
+    if (res.status === 200) {
+      dispatch({
+        type: GET_ORDER,
+        payload: res.data,
+      });
+    } else {
+      dispatch({
         type: NEW_NOTIFICATION,
         payload: res.data.error,
       });
     }
-		}
-
+  };
 };
 
 /**
@@ -50,24 +45,21 @@ export const getOrder = (orderId) => {
  * @return {Function} - Thunk -> action
  */
 export const getOrders = () => {
-	
-	return async (dispatch) => {
-	const res = await axios.get(`/api/orders/`)
+  return async (dispatch) => {
+    const res = await axios.get(`/api/orders/`);
 
-		if (res.status === 200)
-		{
-			dispatch({
-				type: GET_ORDERS,
-				payload: res.data
-			})
-			
-		} else {
-			dispatch({
+    if (res.status === 200) {
+      dispatch({
+        type: GET_ORDERS,
+        payload: res.data,
+      });
+    } else {
+      dispatch({
         type: NEW_NOTIFICATION,
         payload: res.data.error,
       });
     }
-		}
+  };
 };
 
 /**
@@ -81,30 +73,26 @@ export const getOrders = () => {
  * @return {Function} - Thunk -> action
  */
 export const addOrder = (newOrder) => {
+  return async (dispatch) => {
+    const res = await axios.post(`/api/orders/`, newOrder);
 
-	return async (dispatch) => {
-	const res = await axios.post(`/api/orders/`, newOrder)
+    if (res.status === 200) {
+      dispatch({
+        type: ADD_ORDER,
+        payload: res.data,
+      });
 
-		if (res.status === 200)
-		{
-			dispatch({
-				type: ADD_ORDER,
-				payload: res.data
-			})
+      dispatch(emptyCart());
 
-			dispatch(emptyCart())
-
-			dispatch({
-				type: NEW_NOTIFICATION,
-				payload: orderMsg.newOrder
-			})
-			
-		} else {
-			dispatch({
+      dispatch({
+        type: NEW_NOTIFICATION,
+        payload: orderMsg.newOrder,
+      });
+    } else {
+      dispatch({
         type: NEW_NOTIFICATION,
         payload: res.data.error,
       });
     }
-		}
-
+  };
 };
