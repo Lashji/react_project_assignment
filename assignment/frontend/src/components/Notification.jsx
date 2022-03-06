@@ -1,9 +1,11 @@
 /** @format */
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeNotification } from '../redux/actionCreators/notificationsActions';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { removeNotification } from "../redux/actionCreators/notificationsActions";
 
-const Notification = () => {};
+const Notification = () => {
+  return <div></div>;
+};
 
 export default Notification;

@@ -26,23 +26,58 @@ import { initApp } from "./redux/actionCreators/appActions";
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />}/>
-      <Route path="/products" element={<Products />} />
-      <Route path="/products/:productId" element={<Product />} />
-      <Route
-        path="/products/:productId/modify"
-        element={<ProductModifier />}
-      />
-      <Route path="/cart" element={<Cart />}/>
-      <Route path="/orders" element={<Orders />} />
-      <Route path="/orders/:orderId" element={<Order} />
-      <Route path="/register" element={ <Register />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/users" element={ <Users />} />
-      <Route path="/users/:userId" element={ <User /> } />
-      <Route path="/users/:userId/modify" element={ <UserModifier />} /> 
-    </Routes>
+    <div className="app-container">
+      <Navbar />
+      <Notification />
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+
+        <Route
+          path="/products"
+          element={
+            <Auth>
+              <Products />
+            </Auth>
+          }
+        />
+        {/* 
+        <Route path="/products/:productId" element={<Auth />}>
+          <Product />
+        </Route>
+
+        <Route path="/products/:productId/modify" element={<Auth />}>
+          <ProductModifier />
+        </Route>
+
+        <Route path="/cart" element={<Auth />}>
+          <Cart />
+        </Route>
+
+        <Route path="/orders" element={<Auth />}>
+          <Orders />
+        </Route>
+        <Route path="/orders/:orderId" element={<Auth />}>
+          <Order />
+        </Route>
+        <Route path="/register" element={<Auth />}>
+          <Register />
+        </Route>
+        <Route path="/login" element={<Auth />}>
+          <Login />
+        </Route>
+        <Route path="/users" element={<Auth />}>
+          <Users />
+        </Route>
+        <Route path="/users/:userId" element={<Auth />}>
+          <User />
+        </Route>
+        <Route path="/users/:userId/modify" element={<Auth />}>
+          <UserModifier />
+        </Route> */}
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
   );
 };
 
