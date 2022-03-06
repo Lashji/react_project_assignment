@@ -3,21 +3,22 @@
 // USERS ACTION CREATORS
 
 import {
-	GET_USER,
-	GET_USERS,
-	NEW_NOTIFICATION,
-	REMOVE_USER,
-	UPDATE_USER,
-} from '../constants';
+  GET_USER,
+  GET_USERS,
+  NEW_NOTIFICATION,
+  REMOVE_USER,
+  UPDATE_USER,
+} from "../constants";
 
+import axios from "axios";
 //Use these for the notifications sent.
 const userMsg = {
-	gotUser: 'Single user received',
-	gotUsers: 'Users received',
-	updateUser: 'User updated.',
-	delete: (user) => {
-		return `${user.name} deleted successfully`;
-	},
+  gotUser: "Single user received",
+  gotUsers: "Users received",
+  updateUser: "User updated.",
+  delete: (user) => {
+    return `${user.name} deleted successfully`;
+  },
 };
 
 /**
@@ -28,11 +29,25 @@ const userMsg = {
  * @returns {Function} - For the thunk to then dispatch as an object (ie the action).
  */
 export const getUser = (userId) => {
+  return async (dispatch) => {
+    const res = await axios.get(`/api/users/${userId}`);
 
-	return async () => {
-
-	}
-
+    if (res.status === 200) {
+      dispatch({
+        type: GET_USER,
+        payload: res.data,
+      });
+      dispatch({
+        type: NEW_NOTIFICATION,
+        payload: userMsg.gotUser,
+      });
+    } else {
+      dispatch({
+        type: NEW_NOTIFICATION,
+        payload: res.data.error,
+      });
+    }
+  };
 };
 /**
  * @description Asynchronous action creator that gets all the users from the backend (if possible) and sends that Array through thunk to the reducers.
@@ -41,9 +56,25 @@ export const getUser = (userId) => {
  * @returns {Function} - For the thunk to then dispatch as an object (ie the action).
  */
 export const getUsers = () => {
-	return async () => {
-		
-	}
+  return async (dispatch) => {
+    const res = await axios.get("/api/users");
+
+    if (res.status === 200) {
+      dispatch({
+        type: GET_USERS,
+        payload: res.data,
+      });
+      dispatch({
+        type: NEW_NOTIFICATION,
+        payload: userMsg.gotUsers,
+      });
+    } else {
+      dispatch({
+        type: NEW_NOTIFICATION,
+        payload: res.data.error,
+      });
+    }
+  };
 };
 /**
  * @description Asynchronous action creator that updates the given user (if possible) and sends the user received from the backend through thunk to reducers.
@@ -53,9 +84,26 @@ export const getUsers = () => {
  * @returns {Function} - For the thunk to then dispatch as an object (ie the action).
  */
 export const updateUser = (updatedUser) => {
-	return async () => {
-		
-	}
+  return async (dispatch) => {
+    const res = await axios.put(`/api/users/${updateUser.id}`, updatedUser);
+
+    if (res.status === 200) {
+      dispatch({
+        type: UPDATE_USER,
+        payload: res.data,
+      });
+
+      dispatch({
+        type: NEW_NOTIFICATION,
+        payload: userMsg.updateUser,
+      });
+    } else {
+      dispatch({
+        type: NEW_NOTIFICATION,
+        payload: res.data.error,
+      });
+    }
+  };
 };
 /**
  * @description Removes the user (if possible) from the backend, then dispatches an action to remove it from the redux-store, as well as another action to notify the current user that the deletion was succesfull.
@@ -65,7 +113,23 @@ export const updateUser = (updatedUser) => {
  * @returns {Function} - For the thunk to then dispatch as an object (ie the action).
  */
 export const removeUser = (userId) => {
-	return async () => {
-		
-	}
+  return async (dispatch) => {
+    const res = await axios.delete(`/api/users/${userId}`);
+
+    if (res.status === 200) {
+      dispatch({
+        type: REMOVE_USER,
+        payload: res.data,
+      });
+      dispatch({
+        type: NEW_NOTIFICATION,
+        payload: userMsg.delete(res.data),
+      });
+    } else {
+      dispatch({
+        type: NEW_NOTIFICATION,
+        payload: res.data.error,
+      });
+    }
+  };
 };
