@@ -89,6 +89,11 @@ export const incrementCartItem = (productId) => {
       type: UPDATE_CART_ITEM_AMOUNT,
       payload: { productId, amout: 1 },
     });
+
+    dispatch({
+      type: NEW_NOTIFICATION,
+      payload: cartMsg.update,
+    });
   };
 };
 
@@ -111,6 +116,11 @@ export const decrementCartItem = (productId) => {
         productId,
         amount: -1,
       },
+    });
+
+    dispatch({
+      type: NEW_NOTIFICATION,
+      payload: cartMsg.update,
     });
   };
 };

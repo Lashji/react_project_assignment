@@ -1,12 +1,12 @@
 /** @format */
 
 import {
-	ADD_PRODUCT,
-	DELETE_PRODUCT,
-	GET_PRODUCT,
-	GET_PRODUCTS,
-	UPDATE_PRODUCT,
-} from '../constants';
+  ADD_PRODUCT,
+  DELETE_PRODUCT,
+  GET_PRODUCT,
+  GET_PRODUCTS,
+  UPDATE_PRODUCT,
+} from "../constants";
 
 /**
  * Implement productsReducer that handles following cases:
@@ -19,6 +19,26 @@ import {
  * @param {Object} action the action that calls the reducer.
  * @returns {Array} new state for products
  */
-const productsReducer = (state = [], action) => {};
+const productsReducer = (state = [], action) => {
+  switch (action.type) {
+    case ADD_PRODUCT:
+      return [action.payload, ...state];
+
+    case DELETE_PRODUCT:
+      return [...state].filter((i) => i.id !== action.productId);
+
+    case GET_PRODUCT:
+    case GET_PRODUCTS:
+      return [action.payload];
+
+    case UPDATE_PRODUCT:
+      return [
+        ...state.filter((i) => i.id !== action.payload.id),
+        action.payload,
+      ];
+    default:
+      return state;
+  }
+};
 
 export default productsReducer;
