@@ -1,6 +1,6 @@
 /** @format */
 
-import { ADD_ORDER, CLEAR_ORDERS, GET_ORDER, GET_ORDERS } from '../constants';
+import { ADD_ORDER, CLEAR_ORDERS, GET_ORDER, GET_ORDERS } from "../constants";
 
 /**
  * Implement ordersReducer that handles following cases:
@@ -13,25 +13,20 @@ import { ADD_ORDER, CLEAR_ORDERS, GET_ORDER, GET_ORDERS } from '../constants';
  * @returns {Array} new state for orders
  */
 const ordersReducer = (state = [], action) => {
-
   switch (action.type) {
-    
-    case ADD_ORDER: 
-      return []
-    
+    case ADD_ORDER:
+      return [...state, action.payload];
+
     case CLEAR_ORDERS:
-      return []
-    
     case GET_ORDER:
-      return []
-    
+      return [action.payload];
+
     case GET_ORDERS:
-      return []
+      return [];
 
-    default: 
-      return state
+    default:
+      return state;
   }
-
 };
 
 export default ordersReducer;
