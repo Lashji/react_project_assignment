@@ -1,12 +1,12 @@
 /** @format */
 
 import {
-	CLEAR_USERS,
-	GET_USER,
-	GET_USERS,
-	REMOVE_USER,
-	UPDATE_USER,
-} from '../constants';
+  CLEAR_USERS,
+  GET_USER,
+  GET_USERS,
+  REMOVE_USER,
+  UPDATE_USER,
+} from "../constants";
 
 /**
  * Implement productsReducer that handles following cases:
@@ -20,31 +20,26 @@ import {
  * @returns {Array} new state for products
  */
 const usersReducer = (state = [], action) => {
+  switch (action.type) {
+    case CLEAR_USERS:
+      return [];
 
+    case GET_USER:
+    case GET_USERS:
+      return [action.payload];
 
-	switch(action.type)
-	{
+    case REMOVE_USER:
+      return [...state].filter((i) => i.id !== action.payload.id);
 
-		case CLEAR_USERS: 
-			return []
-		
-		case GET_USER:
-			return []
-		
-		case GET_USERS:
-			return []
+    case UPDATE_USER:
+      return [
+        ...state.filter((i) => i.id !== action.payload.id),
+        action.payload,
+      ];
 
-		case REMOVE_USER: 
-			return []
-		
-		case UPDATE_USER:
-			return []
-		
-		default: 
-			return state
-	}
-	
-
+    default:
+      return state;
+  }
 };
 
 export default usersReducer;
