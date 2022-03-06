@@ -74,6 +74,11 @@
             <a class="nav-link text-white" href="#api-Admins">API Methods - Admins</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="#api-Admins-logoutGet">
+              <span class="badge badge-primary">GET</span> /api/logout
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#api-Admins-productsGet">
               <span class="badge badge-primary">GET</span> /api/products
             </a>
@@ -130,6 +135,11 @@
           </li>
           <li class="nav-item bg-info">
             <a class="nav-link text-white" href="#api-Customers">API Methods - Customers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#api-Customers-logoutGet">
+              <span class="badge badge-primary">GET</span> /api/logout
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#api-Customers-productsGet">
@@ -403,6 +413,30 @@
       <section class="my-5" id="api-Admins">
         <h2 class="p-1">API Methods - Admins</h2>
         <p class="lead">Operations available to administrator users</p>
+        <h3 id="api-Admins-logoutGet" class="p-1">
+          <span class="badge badge-primary">GET</span> /api/logout
+        </h3>
+        <p class="lead">Logs out Admin</p>
+        <h4>Path Parameters</h4>
+        <p>None</p>
+        <h4>Request Body</h4>
+        <p>Empty</p>
+        <h4>Responses</h4>
+        <dl class="row">
+          <dt class="col-sm-1">200</dt>
+          <dd class="col-sm-11">
+            User
+            <span class="text-muted">successfully logs out</span>
+          </dd>
+        </dl>
+        <h4>Example Response</h4>
+        <p class="text-monospace">Content-Type: application/json</p>
+        <pre><code class="json">
+          { 
+            "message": "User logged out!"
+          }
+        </code></pre>
+        <hr />
         <h3 id="api-Admins-productsGet" class="p-1">
           <span class="badge badge-primary">GET</span> /api/products
         </h3>
@@ -881,6 +915,30 @@
       <section class="my-5" id="api-Customers">
         <h2 class="p-1">API Methods - Customers</h2>
         <p class="lead">Operations available to registered customers</p>
+        <h3 id="api-Customers-logoutGet" class="p-1">
+          <span class="badge badge-primary">GET</span> /api/logout
+        </h3>
+        <p class="lead">Logs out customer</p>
+        <h4>Path Parameters</h4>
+        <p>None</p>
+        <h4>Request Body</h4>
+        <p>Empty</p>
+        <h4>Responses</h4>
+        <dl class="row">
+          <dt class="col-sm-1">200</dt>
+          <dd class="col-sm-11">
+            User
+            <span class="text-muted">successfully logs out</span>
+          </dd>
+        </dl>
+        <h4>Example Response</h4>
+        <p class="text-monospace">Content-Type: application/json</p>
+        <pre><code class="json">
+          { 
+            "message": "User logged out!"
+          }
+        </code></pre>
+        <hr />
         <h3 id="api-Customers-productsGet" class="p-1">
           <span class="badge badge-primary">GET</span> /api/products
         </h3>
