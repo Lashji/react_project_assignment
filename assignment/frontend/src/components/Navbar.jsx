@@ -18,10 +18,14 @@ const Navbar = () => {
   const userRole = "guest";
 
   const links = AllLinks[userRole].map((i) => {
-    return <Link to={`/${i}`}>i</Link>;
+    return (
+      <Link key={`link-${i}`} to={`/${i}`}>
+        {i}
+      </Link>
+    );
   });
 
-  if (userRole != "guest") {
+  if (userRole !== "guest") {
     links.push(<Link to="/logout">Logout</Link>);
   }
 
