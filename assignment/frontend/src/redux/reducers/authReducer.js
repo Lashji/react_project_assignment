@@ -12,10 +12,10 @@ import { INIT_AUTH, REMOVE_AUTH } from "../constants";
 const authReducer = (state = {}, action) => {
   switch (action.type) {
     case INIT_AUTH:
-      return { ...state };
+      return action.payload;
 
     case REMOVE_AUTH:
-      return {};
+      return { role: "guest" };
 
     default:
       return state;
