@@ -34,19 +34,24 @@ const App = () => {
         <Route
           path="/products"
           element={
-            <Auth>
+            <Auth authRoles={["guest", "admin", "customer"]}>
               <Products />
             </Auth>
           }
         />
+        <Route
+          path="/cart"
+          element={
+            <Auth authRoles={["guest", "customer"]}>
+              <Cart />
+            </Auth>
+          }
+        ></Route>
         <Route path="/products/:productId" element={<Auth />}>
           <Product />
         </Route>
         <Route path="/products/:productId/modify" element={<Auth />}>
           <ProductModifier />
-        </Route>
-        <Route path="/cart" element={<Auth />}>
-          <Cart />
         </Route>
         <Route path="/orders" element={<Auth />}>
           <Orders />

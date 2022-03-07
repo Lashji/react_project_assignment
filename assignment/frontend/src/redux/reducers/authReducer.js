@@ -9,7 +9,7 @@ import { INIT_AUTH, REMOVE_AUTH } from "../constants";
  * @param {Object} action the action that calls the reducer.
  * @returns {Object} new state for auth
  */
-const authReducer = (state = {}, action) => {
+const authReducer = (state = {role: 'guest'}, action) => {
   switch (action.type) {
     case INIT_AUTH:
       return action.payload;

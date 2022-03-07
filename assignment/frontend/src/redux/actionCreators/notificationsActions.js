@@ -23,9 +23,7 @@ export const createNotification = (
  * @return {Object} action
  */
 export const removeNotification = () => {
-  setTimeout(() => {
     return {
       type: REMOVE_NOTIFICATION,
     };
-  }, 5000);
 };

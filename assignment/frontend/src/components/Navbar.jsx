@@ -15,9 +15,9 @@ const AllLinks = {
  *
  */
 const Navbar = () => {
-  const userRole = "guest";
+  const role = useSelector((state) => state.auth.role);
 
-  const links = AllLinks[userRole].map((i) => {
+  const links = AllLinks[role].map((i) => {
     return (
       <Link key={`link-${i}`} to={`/${i}`}>
         {i}
@@ -25,7 +25,7 @@ const Navbar = () => {
     );
   });
 
-  if (userRole !== "guest") {
+  if (role !== "guest") {
     links.push(<Link to="/logout">Logout</Link>);
   }
 
