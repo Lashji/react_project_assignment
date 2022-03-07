@@ -39,7 +39,6 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
         </Route>
 
-        {/* Users */}
         <Route element={<Auth authRoles={["admin"]} />}>
           <Route path="/users" element={<Users />}></Route>
           <Route path="/users/:userId" element={<User />}></Route>
@@ -53,7 +52,6 @@ const App = () => {
           ></Route>
         </Route>
 
-        {/* Orders  */}
         <Route element={<Auth authRoles={["customer", "admin"]} />}>
           <Route path="/orders" element={<Orders />}></Route>
           <Route path="/orders/:orderId" element={<Order />}></Route>
