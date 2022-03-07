@@ -1,10 +1,12 @@
 /** @format */
 
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { removeUser } from '../redux/actionCreators/usersActions';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { removeUser } from "../redux/actionCreators/usersActions";
 
-const User = ({ providedUser }) => {};
+const User = ({ providedUser }) => {
+  return <div></div>;
+};
 
 export default User;
