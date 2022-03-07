@@ -7,7 +7,8 @@ import { addOrder } from "../redux/actionCreators/ordersActions";
 import CartItem from "./CartItem";
 
 const Cart = () => {
-  const emptyCartElement = <div data-testid="empty-cart"></div>;
+  console.log("cart");
+  const emptyCartElement = <div data-testid="empty-cart">Cart is empty!</div>;
 
   const cart = useSelector((state) => state.cart);
   let content = <></>;
@@ -15,7 +16,12 @@ const Cart = () => {
     const cartItems = cart.map((i) => {
       return <CartItem key={`cart-item-${i.name}`} item={i} />;
     });
-    content = <ul data-testid="cart-item-container">{cartItems}</ul>;
+    content = (
+      <>
+        <ul data-testid="cart-item-container">{cartItems}</ul>
+        <button data-testid="order-button">Order</button>
+      </>
+    );
   } else {
     content = emptyCartElement;
   }

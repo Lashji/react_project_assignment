@@ -20,6 +20,7 @@ const Auth = ({ authRoles }) => {
   if (!authRoles.includes(auth.role) && auth.role === "guest")
     navigate("/login");
   else if (!authRoles.includes(auth.role)) navigate("/");
+
   return (
     <div data-testid="auth-success-component">
       <Outlet />
