@@ -15,7 +15,8 @@ const AllLinks = {
  *
  */
 const Navbar = () => {
-  const role = useSelector((state) => state.auth.role);
+  const role = useSelector((state) => state.auth.user.role);
+  console.log("ROLE ", role);
 
   const links = AllLinks[role].map((i) => {
     return (

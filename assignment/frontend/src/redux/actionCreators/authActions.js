@@ -66,7 +66,7 @@ export const initAuth = () => {
  */
 export const logIn = (logInCreds) => {
   return async (dispatch) => {
-    if (validate(dispatch, logInCreds)) {
+    if (validateLogin(dispatch, logInCreds)) {
       const res = await axios.post("/api/login", logInCreds);
 
       if (res.status === 200) {
@@ -130,10 +130,12 @@ export const logOut = () => {
  */
 export const register = (registerCreds) => {
   return async (dispatch) => {
-    if (validate(dispatch, registerCreds)) {
-      const res = await axios.post("/api/register", registerCreds);
+    if (validateRegistration(dispatch, registerCreds)) {
+      const {name, email, password} = registerCreds
 
-      if (res.status === 200) {
+      const res = await axios.post("/api/register", {name, email, password});
+
+      if (res.status === 201) {
         dispatch({
           type: INIT_AUTH,
           payload: res.data,
@@ -153,7 +155,7 @@ export const register = (registerCreds) => {
   };
 };
 
-const validate = (dispatch, creds) => {
+const validateRegistration = (dispatch, creds) => {
   if (creds.name.length < 4) {
     dispatch({
       type: NEW_NOTIFICATION,
@@ -183,5 +185,27 @@ const validate = (dispatch, creds) => {
     });
     return false;
   }
+  return true;
+};
+
+
+const validateLogin = (dispatch, creds) => {
+
+
+  if (!creds.email.match(validEmailRegex)) {
+    dispatch({
+      type: NEW_NOTIFICATION,
+      payload: invalidAuth.email,
+    });
+    return false;
+  }
+  if (creds.password.length < 10) {
+    dispatch({
+      type: NEW_NOTIFICATION,
+      payload: invalidAuth.password,
+    });
+    return false;
+  }
+
   return true;
 };

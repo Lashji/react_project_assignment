@@ -5,23 +5,47 @@ import { useDispatch } from "react-redux";
 import { logIn } from "../redux/actionCreators/authActions";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(
+      logIn({
+        email,
+        password,
+      })
+    );
+  };
+
   return (
     <div data-testid="login-component">
       <h1>Login</h1>
-      <form>
-        <label for="email">Email:</label>
-        <input name="email" data-testid="email-input" type={"email"} required />
-        <br />
-        <label for="pw">Password:</label>
+      <form onSubmit={handleSubmit} data-testid="login-form">
+        <label htmlFor="email">Email:</label>
         <input
-          name="pw"
+          name="email"
+          data-testid="email-input"
+          type={"email"}
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <br />
+        <label htmlFor="password">Password:</label>
+        <input
+          name="password"
           data-testid="password-input"
           type={"password"}
           required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <br />
         <button type="submit" data-testid="login-button">
-          Submit
+          LogIn
         </button>
       </form>
     </div>
