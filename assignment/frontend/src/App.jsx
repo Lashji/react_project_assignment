@@ -25,6 +25,12 @@ import { getUser } from "./redux/actionCreators/usersActions";
 import { initApp } from "./redux/actionCreators/appActions";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initApp());
+  }, []);
+
   return (
     <div className="app-container">
       <Navbar />

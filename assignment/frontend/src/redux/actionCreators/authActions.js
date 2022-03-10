@@ -42,7 +42,7 @@ export const validAuth = {
 export const initAuth = () => {
   return async (dispatch) => {
     const res = await axios.get("/api/check-status");
-
+    console.log("INIT AUTH");
     if (res.status === 200) {
       dispatch({
         type: INIT_AUTH,

@@ -18,6 +18,7 @@ const authReducer = (state = {
       return action.payload;
 
     case REMOVE_AUTH:
+      console.log("REMOVE AUTH")
       return {user: {
   role: 'guest'
 } };

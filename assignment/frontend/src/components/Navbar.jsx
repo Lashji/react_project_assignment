@@ -18,6 +18,8 @@ const Navbar = () => {
   const role = useSelector((state) => state.auth.user.role);
   console.log("ROLE ", role);
 
+  const dispatch = useDispatch();
+
   const links = AllLinks[role].map((i) => {
     return (
       <Link key={`link-${i}`} to={`/${i}`}>
@@ -27,13 +29,21 @@ const Navbar = () => {
   });
 
   if (role !== "guest") {
-    links.push(<Link to="/logout">Logout</Link>);
+    links.push(
+      <Link to={"/"} onClick={(e) => dispatch(logOut())} key={"link-logout"}>
+        Logout
+      </Link>
+    );
   }
 
   return (
     <div>
-      <Link to="/">Home</Link>
-      <Link to="Products">Products</Link>
+      <Link to="/" key={"link-home"}>
+        Home
+      </Link>
+      <Link to="Products" key={"link-products"}>
+        Products
+      </Link>
       {links}
     </div>
   );
