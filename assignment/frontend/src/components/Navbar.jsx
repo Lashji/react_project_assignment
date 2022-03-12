@@ -23,14 +23,16 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   console.log("ALLLINKS", AllLinks);
-
-  const links = AllLinks[role].map((i) => {
-    return (
-      <Link key={`link-${i}`} to={`/${i}`}>
-        {i}
-      </Link>
-    );
-  });
+  let links = [];
+  if (AllLinks[role]) {
+    links = AllLinks[role].map((i) => {
+      return (
+        <Link key={`link-${i}`} to={`/${i}`}>
+          {i}
+        </Link>
+      );
+    });
+  }
 
   if (role !== "guest") {
     links.push(

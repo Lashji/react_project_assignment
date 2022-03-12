@@ -32,7 +32,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="app-container">
+    <div className="app-container" data-testid="app-component">
       <Navbar />
       <Notification />
       <Routes>

@@ -11,12 +11,17 @@ const Notification = () => {
     return state.notification;
   });
 
-  setTimeout(() => {
-    dispatch(removeNotification());
-  }, 5000);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      console.log("set new timeout");
+      dispatch(removeNotification());
+    }, 5000);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   let notificationElement = <div data-testid="no-notification-component"></div>;
-
+  console.log("Notification ", notification);
   if (Object.keys(notification).length > 0) {
     notificationElement = (
       <div

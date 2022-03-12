@@ -16,6 +16,7 @@ const notificationReducer = (state = {}, action) => {
       return action.payload ;
 
     case REMOVE_NOTIFICATION: {
+      console.log("remove notification");
       return {};
     }
 
