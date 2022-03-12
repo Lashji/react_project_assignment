@@ -22,6 +22,7 @@ import {
 const productsReducer = (state = [], action) => {
   switch (action.type) {
     case ADD_PRODUCT:
+      console.log("add product", action.payload);
       return [action.payload, ...state];
 
     case DELETE_PRODUCT:

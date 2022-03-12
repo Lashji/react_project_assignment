@@ -73,7 +73,7 @@ export const addProduct = (productToAdd) => {
   return async (dispatch) => {
     const res = await axios.post("/api/products/", productToAdd);
 
-    if (res.status === 200) {
+    if (res.status === 201) {
       dispatch({
         type: ADD_PRODUCT,
         payload: productToAdd,
