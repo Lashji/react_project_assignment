@@ -33,7 +33,7 @@ export const getOrder = (orderId) => {
     } else {
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: res.data.error,
+        payload: {message: res.data.error, isSuccess: false},
       });
     }
   };
@@ -56,7 +56,7 @@ export const getOrders = () => {
     } else {
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: res.data.error,
+        payload: {message: res.data.error, isSuccess:false},
       });
     }
   };
@@ -86,12 +86,12 @@ export const addOrder = (newOrder) => {
 
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: orderMsg.newOrder,
+        payload: {message : orderMsg.newOrder, isSuccess : true},
       });
     } else {
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: res.data.error,
+        payload: {message: res.data.error, isSuccess: false},
       });
     }
   };

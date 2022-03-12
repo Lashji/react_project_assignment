@@ -13,7 +13,7 @@ import { NEW_NOTIFICATION, REMOVE_NOTIFICATION } from "../constants";
 const notificationReducer = (state = {}, action) => {
   switch (action.type) {
     case NEW_NOTIFICATION:
-      return action.payload;
+      return action.payload ;
 
     case REMOVE_NOTIFICATION: {
       return {};

@@ -11,7 +11,12 @@ const Notification = () => {
     return state.notification;
   });
 
+  setTimeout(() => {
+    dispatch(removeNotification());
+  }, 5000);
+
   let notificationElement = <div data-testid="no-notification-component"></div>;
+
   if (Object.keys(notification).length > 0) {
     notificationElement = (
       <div
@@ -21,10 +26,6 @@ const Notification = () => {
         {notification.message}
       </div>
     );
-
-    setTimeout(() => {
-      dispatch(removeNotification());
-    }, 5000);
   }
 
   return notificationElement;

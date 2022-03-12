@@ -76,12 +76,12 @@ export const addProduct = (productToAdd) => {
     if (res.status === 201) {
       dispatch({
         type: ADD_PRODUCT,
-        payload: productToAdd,
+        payload: res.data,
       });
 
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: productMsg.added,
+        payload: {message: productMsg.added, isSuccess: true},
       });
     } else {
       dispatchError(dispatch, res);
@@ -101,12 +101,12 @@ export const updateProduct = (productToUpdate) => {
     if (res.status === 200) {
       dispatch({
         type: UPDATE_PRODUCT,
-        payload: productToUpdate,
+        payload: res.data,
       });
 
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: productMsg.updated,
+        payload: {message: productMsg.updated, isSuccess: true},
       });
     } else {
       dispatchError(dispatch, res);
@@ -131,7 +131,7 @@ export const deleteProduct = (productId) => {
 
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: productMsg.deleted(res.data),
+        payload: {message: productMsg.deleted(res.data), isSuccess: true},
       });
     } else {
       dispatchError(dispatch, res);
@@ -142,6 +142,6 @@ export const deleteProduct = (productId) => {
 function dispatchError(dispatch, res) {
   dispatch({
     type: NEW_NOTIFICATION,
-    payload: res.data.error,
+    payload: {message: res.data.error, isSuccess: false},
   });
 }

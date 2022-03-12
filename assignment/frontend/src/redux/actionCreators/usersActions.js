@@ -39,12 +39,12 @@ export const getUser = (userId) => {
       });
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: userMsg.gotUser,
+        payload: {message: userMsg.gotUser, isSuccess: true},
       });
     } else {
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: res.data.error,
+        payload: {message: res.data.error, isSuccess: false},
       });
     }
   };
@@ -66,12 +66,12 @@ export const getUsers = () => {
       });
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: userMsg.gotUsers,
+        payload: {message: userMsg.gotUsers, isSuccess: true},
       });
     } else {
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: res.data.error,
+        payload: {message: res.data.error, isSuccess: false},
       });
     }
   };
@@ -95,12 +95,12 @@ export const updateUser = (updatedUser) => {
 
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: userMsg.updateUser,
+        payload: {message: userMsg.updateUser, isSuccess: true},
       });
     } else {
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: res.data.error,
+        payload: {message: res.data.error, isSuccess: false},
       });
     }
   };
@@ -123,12 +123,12 @@ export const removeUser = (userId) => {
       });
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: userMsg.delete(res.data),
+        payload: {message: userMsg.delete(res.data), isSuccess: true},
       });
     } else {
       dispatch({
         type: NEW_NOTIFICATION,
-        payload: res.data.error,
+        payload: {message: res.data.error, isSuccess: false},
       });
     }
   };

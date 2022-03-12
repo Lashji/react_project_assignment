@@ -57,7 +57,7 @@ export const addCartItem = (product) => {
 
     dispatch({
       type: NEW_NOTIFICATION,
-      payload: cartMsg.add,
+      payload: { message: cartMsg.add, isSuccess: true },
     });
   };
 };
@@ -100,7 +100,7 @@ export const incrementCartItem = (productId) => {
 
     dispatch({
       type: NEW_NOTIFICATION,
-      payload: cartMsg.update,
+      payload: { message: cartMsg.update, isSuccess: true },
     });
   };
 };
@@ -128,7 +128,7 @@ export const decrementCartItem = (productId) => {
 
     dispatch({
       type: NEW_NOTIFICATION,
-      payload: cartMsg.update,
+      payload: { message: cartMsg.update, isSuccess: true },
     });
   };
 };

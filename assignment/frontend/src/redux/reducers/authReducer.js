@@ -18,7 +18,7 @@ const authReducer = (state = {
 
     case REMOVE_AUTH:
       console.log("REMOVE AUTH")
-      return {role: 'quest' };
+      return {role: 'guest' };
 
     default:
       return state;

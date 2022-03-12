@@ -49,10 +49,9 @@ export const initAuth = () => {
         payload: res.data,
       });
     } else {
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: res.data.error,
-      });
+      dispatch(
+        createNotification({ message: res.data.error, isSuccess: false })
+      );
     }
   };
 };
@@ -75,15 +74,16 @@ export const logIn = (logInCreds) => {
           payload: res.data,
         });
 
-        dispatch({
-          type: NEW_NOTIFICATION,
-          payload: validAuth.welcomeBack,
-        });
+        dispatch(
+          createNotification({
+            message: validAuth.welcomeBack,
+            isSuccess: true,
+          })
+        );
       } else {
-        dispatch({
-          type: NEW_NOTIFICATION,
-          payload: res.data.error,
-        });
+        dispatch(
+          createNotification({ message: res.data.error, isSuccess: false })
+        );
       }
     }
   };
@@ -112,10 +112,7 @@ export const logOut = () => {
       dispatch({
         type: CLEAR_USERS,
       });
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: res.data,
-      });
+      dispatch(createNotification({ ...res.data, isSuccess: true }));
     }
   };
 };
@@ -131,9 +128,9 @@ export const logOut = () => {
 export const register = (registerCreds) => {
   return async (dispatch) => {
     if (validateRegistration(dispatch, registerCreds)) {
-      const {name, email, password} = registerCreds
+      const { name, email, password } = registerCreds;
 
-      const res = await axios.post("/api/register", {name, email, password});
+      const res = await axios.post("/api/register", { name, email, password });
 
       if (res.status === 201) {
         dispatch({
@@ -141,15 +138,16 @@ export const register = (registerCreds) => {
           payload: res.data,
         });
 
-        dispatch({
-          type: NEW_NOTIFICATION,
-          payload: validAuth.welcome(res.data.name),
-        });
+        dispatch(
+          createNotification({
+            message: validAuth.welcome(res.data.name),
+            isSuccess: true,
+          })
+        );
       } else {
-        dispatch({
-          type: NEW_NOTIFICATION,
-          payload: res.data.error,
-        });
+        createNotification(
+          dispatch({ message: res.data.error, isSuccess: false })
+        );
       }
     }
   };
@@ -157,53 +155,50 @@ export const register = (registerCreds) => {
 
 const validateRegistration = (dispatch, creds) => {
   if (creds.name.length < 4) {
-    dispatch({
-      type: NEW_NOTIFICATION,
-      payload: invalidAuth.name,
-    });
+    dispatch(
+      createNotification({
+        message: invalidAuth.name,
+        isSuccess: false,
+      })
+    );
     return false;
   }
 
   if (!creds.email.match(validEmailRegex)) {
-    dispatch({
-      type: NEW_NOTIFICATION,
-      payload: invalidAuth.email,
-    });
+    dispatch(
+      createNotification({ message: invalidAuth.email, isSuccess: false })
+    );
     return false;
   }
   if (creds.password.length < 10) {
-    dispatch({
-      type: NEW_NOTIFICATION,
-      payload: invalidAuth.password,
-    });
+    dispatch(
+      createNotification({ message: invalidAuth.password, isSuccess: false })
+    );
     return false;
   }
   if (creds.password !== creds.passwordConfirmation) {
-    dispatch({
-      type: NEW_NOTIFICATION,
-      payload: invalidAuth.passwordMismatch,
-    });
+    dispatch(
+      createNotification({
+        message: invalidAuth.passwordMismatch,
+        isSuccess: false,
+      })
+    );
     return false;
   }
   return true;
 };
 
-
 const validateLogin = (dispatch, creds) => {
-
-
   if (!creds.email.match(validEmailRegex)) {
-    dispatch({
-      type: NEW_NOTIFICATION,
-      payload: invalidAuth.email,
-    });
+    dispatch(
+      createNotification({ message: invalidAuth.email, isSuccess: false })
+    );
     return false;
   }
   if (creds.password.length < 10) {
-    dispatch({
-      type: NEW_NOTIFICATION,
-      payload: invalidAuth.password,
-    });
+    dispatch(
+      createNotification({ message: invalidAuth.password, isSuccess: false })
+    );
     return false;
   }
 

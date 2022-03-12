@@ -16,11 +16,13 @@ const AllLinks = {
  */
 const Navbar = () => {
   const role = useSelector((state) => state.auth.role);
-  console.log("ROLE ", role);
+  console.log("ROLE in navbar", role);
 
   // TODO: FIX NAVBAR
 
   const dispatch = useDispatch();
+
+  console.log("ALLLINKS", AllLinks);
 
   const links = AllLinks[role].map((i) => {
     return (
