@@ -70,7 +70,7 @@ const Register = () => {
           required
         />
         <br />
-        <button type="submit" data-testid="register-button">
+        <button value={"Register"} type="submit" data-testid="register-button">
           Register
         </button>
       </form>

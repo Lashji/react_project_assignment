@@ -20,7 +20,11 @@ const cartMsg = {
  */
 export const initCart = () => {
   return function (dispatch, getState) {
-    const localCart = JSON.parse(window.localStorage.getItem("cart"));
+    let localCart = JSON.parse(window.localStorage.getItem("cart"));
+
+    if (localCart === null) {
+      localCart = [];
+    }
 
     dispatch({
       type: INIT_CART,
@@ -36,7 +40,11 @@ export const initCart = () => {
  */
 export const addCartItem = (product) => {
   return function (dispatch, getState) {
-    const cart = JSON.parse(window.localStorage.getItem("cart"));
+    let cart = JSON.parse(window.localStorage.getItem("cart"));
+
+    if (cart === null) {
+      cart = [];
+    }
 
     cart.push(product);
 

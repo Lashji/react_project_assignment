@@ -16,7 +16,7 @@ const Notification = () => {
     notificationElement = (
       <div
         data-testid="notification-component"
-        style={{ backgroundColor: notification.isSucces ? "green" : "red" }}
+        style={{ backgroundColor: notification.isSuccess ? "green" : "red" }}
       >
         {notification.message}
       </div>

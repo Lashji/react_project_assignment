@@ -29,7 +29,7 @@ const productsReducer = (state = [], action) => {
 
     case GET_PRODUCT:
     case GET_PRODUCTS:
-      return [action.payload];
+      return action.payload;
 
     case UPDATE_PRODUCT:
       return [

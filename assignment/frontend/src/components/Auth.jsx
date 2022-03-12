@@ -16,9 +16,9 @@ const Auth = ({ authRoles }) => {
   });
 
   useEffect(() => {
-    if (!authRoles.includes(auth.user.role) && auth.user.role === "guest")
+    if (!authRoles.includes(auth.role) && auth.role === "guest")
       navigate("/login");
-    else if (!authRoles.includes(auth.user.role)) navigate("/");
+    else if (!authRoles.includes(auth.role)) navigate("/");
   });
 
   console.log("auth params id", id);

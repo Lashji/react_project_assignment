@@ -26,7 +26,7 @@ const usersReducer = (state = [], action) => {
 
     case GET_USER:
     case GET_USERS:
-      return [action.payload];
+      return action.payload;
 
     case REMOVE_USER:
       return [...state].filter((i) => i.id !== action.payload.id);
