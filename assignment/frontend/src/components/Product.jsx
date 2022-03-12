@@ -13,7 +13,10 @@ import { deleteProduct } from "../redux/actionCreators/productsActions";
 const Product = ({ providedProduct }) => {
   // console.log("product", providedProduct);
 
-  let { id } = useParams();
+  const params = useParams();
+  let { id } = params;
+
+  console.log("userParams");
 
   if (!id) id = providedProduct.id;
 
@@ -59,13 +62,13 @@ const Product = ({ providedProduct }) => {
         <div>
           <button
             data-testid={`delete-button-${id}`}
-            onClick={(e) => dispatch(deleteProduct(providedProduct))}
+            onClick={(e) => dispatch(deleteProduct(providedProduct.id))}
           >
             Delete
           </button>
           <button
             data-testid={`modify-button-${id}`}
-            onClick={navigate(`${id}/modify`)}
+            onClick={(e) => navigate(`${id}/modify`)}
           >
             Modify
           </button>

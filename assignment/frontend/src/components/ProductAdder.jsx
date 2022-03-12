@@ -16,7 +16,7 @@ const ProductAdder = ({ open, openHandler }) => {
     e.preventDefault();
 
     dispatch(addProduct({}));
-    openHandler();
+    openHandler(false);
   };
 
   if (!open) return <></>;
@@ -52,7 +52,7 @@ const ProductAdder = ({ open, openHandler }) => {
       <button data-testid="add-button" onClick={(e) => handleAddProduct(e)}>
         Add product
       </button>
-      <button data-testid="cancel-button" onClick={(e) => openHandler()}>
+      <button data-testid="cancel-button" onClick={(e) => openHandler(e)}>
         Cancel
       </button>
     </form>

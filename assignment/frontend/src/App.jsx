@@ -39,7 +39,14 @@ const App = () => {
         <Route path="/" element={<Home />}></Route>
         <Route path="/products" element={<Products />}></Route>
 
-        <Route path="/products/:productId" element={<Product />}></Route>
+        <Route
+          path="/products/:productId"
+          element={
+            <Finder type="product" findHandler={getProduct}>
+              <Product />
+            </Finder>
+          }
+        ></Route>
 
         <Route element={<Auth authRoles={["guest", "customer"]} />}>
           <Route path="/cart" element={<Cart />} />
@@ -47,20 +54,42 @@ const App = () => {
 
         <Route element={<Auth authRoles={["admin"]} />}>
           <Route path="/users" element={<Users />}></Route>
-          <Route path="/users/:userId" element={<User />}></Route>
+          <Route
+            path="/users/:userId"
+            element={
+              <Finder type={"user"} findHandler={getUser}>
+                <User />
+              </Finder>
+            }
+          ></Route>
           <Route
             path="/users/:userId/modify"
-            element={<UserModifier />}
+            element={
+              <Finder type={"user"} findHandler={getUser}>
+                <UserModifier />
+              </Finder>
+            }
           ></Route>
           <Route
             path="/products/:productId/modify"
-            element={<ProductModifier />}
+            element={
+              <Finder type={"product"} findHandler={getProduct}>
+                <ProductModifier />
+              </Finder>
+            }
           ></Route>
         </Route>
 
         <Route element={<Auth authRoles={["customer", "admin"]} />}>
           <Route path="/orders" element={<Orders />}></Route>
-          <Route path="/orders/:orderId" element={<Order />}></Route>
+          <Route
+            path="/orders/:orderId"
+            element={
+              <Finder type={"order"} findHandler={getOrder}>
+                <Order />
+              </Finder>
+            }
+          ></Route>
         </Route>
 
         <Route element={<Auth authRoles={["guest"]} />}>

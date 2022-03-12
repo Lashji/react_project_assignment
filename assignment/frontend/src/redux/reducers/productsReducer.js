@@ -25,7 +25,7 @@ const productsReducer = (state = [], action) => {
       return [action.payload, ...state];
 
     case DELETE_PRODUCT:
-      return [...state].filter((i) => i.id !== action.productId);
+      return [...state].filter((i) => i.id !== action.payload.id);
 
     case GET_PRODUCT:
     case GET_PRODUCTS:
