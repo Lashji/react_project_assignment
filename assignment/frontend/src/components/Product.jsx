@@ -2,7 +2,12 @@
 
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  Link,
+  useOutletContext,
+} from "react-router-dom";
 import {
   addCartItem,
   incrementCartItem,
@@ -11,14 +16,19 @@ import {
 import { deleteProduct } from "../redux/actionCreators/productsActions";
 
 const Product = ({ providedProduct }) => {
-  // console.log("product", providedProduct);
+  const product = useOutletContext();
+  console.log("Provided product", providedProduct, product);
 
   const params = useParams();
-  let { id } = params;
+  let { productId } = params;
 
-  console.log("userParams");
+  if (!providedProduct) {
+    providedProduct = product;
+  }
 
-  if (!id) id = providedProduct.id;
+  console.log("product:", providedProduct);
+
+  if (!productId) productId = providedProduct.id;
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,11 +41,11 @@ const Product = ({ providedProduct }) => {
     return state.cart;
   });
 
-  console.log("cart = ", cart, id);
+  console.log("cart = ", cart, productId);
   const addToCart = () => {
-    if (cart.find((i) => i.id === id)) {
+    if (cart.find((i) => i.id === productId)) {
       console.log("increment");
-      dispatch(incrementCartItem(id));
+      dispatch(incrementCartItem(productId));
     } else {
       console.log("add");
       dispatch(addCartItem(providedProduct));
@@ -61,14 +71,14 @@ const Product = ({ providedProduct }) => {
       return (
         <div>
           <button
-            data-testid={`delete-button-${id}`}
+            data-testid={`delete-button-${productId}`}
             onClick={(e) => dispatch(deleteProduct(providedProduct.id))}
           >
             Delete
           </button>
           <button
-            data-testid={`modify-button-${id}`}
-            onClick={(e) => navigate(`${id}/modify`)}
+            data-testid={`modify-button-${productId}`}
+            onClick={(e) => navigate(`${productId}/modify`)}
           >
             Modify
           </button>
@@ -77,7 +87,10 @@ const Product = ({ providedProduct }) => {
     } else {
       return (
         <div>
-          <button data-testid={`add-cart-button-${id}`} onClick={addToCart}>
+          <button
+            data-testid={`add-cart-button-${productId}`}
+            onClick={addToCart}
+          >
             Add to cart
           </button>
         </div>
@@ -87,7 +100,9 @@ const Product = ({ providedProduct }) => {
 
   return (
     <div data-testid="product-component">
-      <div data-testid="name-header">{providedProduct.name}</div>
+      <div data-testid="name-header">
+        <Link to={`./${productId}`}>{providedProduct.name}</Link>
+      </div>
       {getImage()}
       <div data-testid="description-element">{providedProduct.description}</div>
       <div data-testid="price-element">{providedProduct.price}</div>

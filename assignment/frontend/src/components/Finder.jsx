@@ -13,37 +13,47 @@ const Finder = ({ type, findHandler }) => {
   let component;
   const state = useSelector((state) => state);
 
-  useEffect(() => {
-    switch (type) {
-      case "product":
+  console.log("Finder fired");
+
+  switch (type) {
+    case "product":
+      if (state.products.length > 0)
         val = state["products"].find((i) => i.id === productId);
-        break;
+      break;
 
-      case "order":
+    case "order":
+      if (state.orders.length > 0)
         val = state["orders"].find((i) => i.id === productId);
-        break;
-      case "user":
+      break;
+    case "user":
+      if (state.users.length > 0)
         val = state["users"].find((i) => i.id === productId);
-        break;
+      break;
 
-      default:
-        break;
-    }
+    default:
+      break;
+  }
+
+  useEffect(() => {
     if (!val) {
-      console.log("VAL ", val);
+      console.log("VAL not found, getting product", productId);
       dispatch(findHandler(productId));
     }
-
-    if (val) {
-      component = (
-        <div data-testid={`${type}-found-component`}>
-          <Outlet context={val} />
-        </div>
-      );
-    } else {
-      component = <div data-testid={`no-${type}-found-component`}></div>;
-    }
   }, []);
+
+  if (val) {
+    console.log("Value found returning outlet", val);
+    component = (
+      <div data-testid={`${type}-found-component`}>
+        <Outlet context={val} />
+      </div>
+    );
+  } else {
+    console.log("Finder unsuccessfull");
+    component = (
+      <div data-testid={`no-${type}-found-component`}>{type} not found</div>
+    );
+  }
 
   return <>{component}</>;
 };
