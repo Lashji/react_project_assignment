@@ -22,7 +22,7 @@ const Products = () => {
     return state.auth.role;
   });
 
-  let roleBasedComponent = () => {
+  const roleBasedComponent = () => {
     if (role === "admin") {
       return (
         <div>
