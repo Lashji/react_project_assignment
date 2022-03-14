@@ -7,7 +7,6 @@ import { removeNotification } from "../redux/actionCreators/notificationsActions
 const Notification = () => {
   const dispatch = useDispatch();
   const notification = useSelector((state) => {
-    console.log("notification state", state);
     return state.notification;
   });
 

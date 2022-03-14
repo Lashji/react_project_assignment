@@ -68,16 +68,14 @@ export const addCartItem = (product) => {
  * @return {Object} Action
  */
 export const removeCartItem = (product) => {
-  return function (dispatch) {
-    const cart = JSON.parse(window.localStorage.getItem("cart"));
+  let cart = JSON.parse(window.localStorage.getItem("cart"));
 
-    cart.remove(product);
+  cart = cart.filter((i) => i.product.id !== product.id);
 
-    window.localStorage.setItem("cart", JSON.stringify(cart));
-    dispatch({
-      type: REMOVE_CART_ITEM,
-      payload: product,
-    });
+  window.localStorage.setItem("cart", JSON.stringify(cart));
+  return {
+    type: REMOVE_CART_ITEM,
+    payload: product,
   };
 };
 
@@ -89,13 +87,13 @@ export const removeCartItem = (product) => {
 export const incrementCartItem = (productId) => {
   return function (dispatch) {
     const cart = JSON.parse(window.localStorage.getItem("cart"));
-
-    cart.find((i) => i.id === productId).quantity++;
+    console.log("productID", productId);
+    cart.find((i) => i.product.id === productId).quantity++;
 
     window.localStorage.setItem("cart", JSON.stringify(cart));
     dispatch({
       type: UPDATE_CART_ITEM_AMOUNT,
-      payload: { productId, amout: 1 },
+      payload: { productId, amount: 1 },
     });
 
     dispatch({
@@ -115,7 +113,7 @@ export const decrementCartItem = (productId) => {
   return function (dispatch) {
     const cart = JSON.parse(window.localStorage.getItem("cart"));
 
-    cart.find((i) => i.id === productId).quantity--;
+    cart.find((i) => i.product.id === productId).quantity--;
 
     window.localStorage.setItem("cart", JSON.stringify(cart));
     dispatch({

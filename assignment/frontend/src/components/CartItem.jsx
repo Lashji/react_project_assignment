@@ -9,14 +9,32 @@ import {
 } from "../redux/actionCreators/cartActions";
 
 const CartItem = ({ item }) => {
+  const dispatch = useDispatch();
+  console.log("cartitem", item);
+
+  const { product, quantity } = item;
   return (
-    <div data-testid={item.id}>
-      <div data-testid="item-name">{item.name}</div>
-      <div data-testid="item-price">{item.price}</div>
-      <div data-testid="item-amount">{item.amount}</div>
+    <div data-testid="cart-item-component">
+      <div data-testid="item-name">{product.name}</div>
+      <div data-testid="item-price">{product.price}</div>
+      <div data-testid="item-amount">{quantity}</div>
       <div className="cart-item-buttons">
-        <button data-testid={`plus-btn-${item.id}`}>+</button>
-        <button data-testid={`minus-btn-${item.id}`}>-</button>
+        <button
+          data-testid={`plus-btn-${product.id}`}
+          onClick={(e) => dispatch(incrementCartItem(product.id))}
+        >
+          +
+        </button>
+        <button
+          data-testid={`minus-btn-${product.id}`}
+          onClick={(e) =>
+            quantity === 1
+              ? dispatch(removeCartItem(product))
+              : dispatch(decrementCartItem(product.id))
+          }
+        >
+          -
+        </button>
       </div>
     </div>
   );

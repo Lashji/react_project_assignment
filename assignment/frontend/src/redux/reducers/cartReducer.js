@@ -31,12 +31,13 @@ const cartReducer = (state = [], action) => {
       return action.payload;
 
     case REMOVE_CART_ITEM:
-      return [...state].filter((i) => i !== i.id);
+      console.log("remove", action.payload);
+      return [...state].filter((i) => i.product.id !== action.payload.id);
 
     case UPDATE_CART_ITEM_AMOUNT:
       return [...state].map((i) => {
-        if (i.id === action.productId) {
-          i.quantity += action.amount;
+        if (i.product.id === action.payload.productId) {
+          i.quantity += parseInt(action.payload.amount);
           return i;
         } else {
           return i;

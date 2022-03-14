@@ -17,7 +17,6 @@ import { deleteProduct } from "../redux/actionCreators/productsActions";
 
 const Product = ({ providedProduct }) => {
   const product = useOutletContext();
-  console.log("Provided product", providedProduct, product);
 
   const params = useParams();
   let { productId } = params;
@@ -25,8 +24,6 @@ const Product = ({ providedProduct }) => {
   if (!providedProduct) {
     providedProduct = product;
   }
-
-  console.log("product:", providedProduct);
 
   if (!productId) productId = providedProduct.id;
 
@@ -41,14 +38,16 @@ const Product = ({ providedProduct }) => {
     return state.cart;
   });
 
-  console.log("cart = ", cart, productId);
   const addToCart = () => {
-    if (cart.find((i) => i.id === productId)) {
+    if (cart.find((i) => i.product.id === productId)) {
       console.log("increment");
       dispatch(incrementCartItem(productId));
     } else {
+      cart.find((i) =>
+        console.log("searching for cart item", i.product === productId)
+      );
       console.log("add");
-      dispatch(addCartItem(providedProduct));
+      dispatch(addCartItem({ product: providedProduct, quantity: 1 }));
     }
   };
 
