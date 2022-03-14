@@ -5,7 +5,15 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 const Order = ({ providedOrder }) => {
-  const { id } = useParams();
+  const { orderId } = useParams();
+
+  const order = useSelector((state) => {
+    return state.orders.find((i) => i.id === orderId);
+  });
+
+  if (!providedOrder) {
+    providedOrder = order;
+  }
 
   const orderItems = providedOrder.items.map((i) => {
     return (
@@ -20,9 +28,9 @@ const Order = ({ providedOrder }) => {
 
   return (
     <div data-testid="order-component">
-      <div data-testid="order-id"></div>
-      <div data-testid="order-customer-id"></div>
-      <Link to={`./orders/${id}`} />
+      <div data-testid="order-id">{orderId}</div>
+      <div data-testid="order-customer-id">{providedOrder.customerId}</div>
+      <Link data-testid="inspect-link" to={`./orders/${orderId}`} />
       <ol>{orderItems}</ol>
     </div>
   );

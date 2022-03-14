@@ -29,6 +29,8 @@ const productsReducer = (state = [], action) => {
       return [...state].filter((i) => i.id !== action.payload.id);
 
     case GET_PRODUCT:
+      return action.payload;
+    
     case GET_PRODUCTS:
       return action.payload;
 

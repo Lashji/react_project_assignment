@@ -96,6 +96,7 @@ describe('Testing thunk action creators', () => {
 				];
 				return store.dispatch(initAuth()).then(() => {
 					const actualActions = store.getActions();
+				
 					expect(actualActions).toEqual(expectedActions);
 				});
 			});
@@ -247,6 +248,8 @@ describe('Testing thunk action creators', () => {
 				];
 				return store.dispatch(register(user)).then(() => {
 					const actualActions = store.getActions();
+
+					
 					expect(actualActions).toEqual(expectedActions);
 				});
 			});
@@ -286,6 +289,8 @@ describe('Testing thunk action creators', () => {
 				];
 				return store.dispatch(register(registerInCreds)).then(() => {
 					const actualActions = store.getActions();
+					console.log("actual actions", actualActions);
+					console.log("expected actions", expectedActions);
 					expect(actualActions).toEqual(expectedActions);
 				});
 			});

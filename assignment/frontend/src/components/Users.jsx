@@ -17,9 +17,11 @@ const Users = () => {
 
   return (
     <div data-testid="users-component">
-      {users.map((i) => {
-        return <User providedUser={i} key={`user-${i.id}`} />;
-      })}
+      <ol data-testid="users-container">
+        {users.map((i) => {
+          return <User providedUser={i} key={`user-${i.id}`} />;
+        })}
+      </ol>
     </div>
   );
 };

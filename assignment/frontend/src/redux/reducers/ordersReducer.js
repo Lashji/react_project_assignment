@@ -17,11 +17,13 @@ const ordersReducer = (state = [], action) => {
     case ADD_ORDER:
       return [...state, action.payload];
 
-    case CLEAR_ORDERS:
-    case GET_ORDER:
-      return [action.payload];
-
     case GET_ORDERS:
+      return action.payload;
+
+    case GET_ORDER:
+      return action.payload;
+
+    case CLEAR_ORDERS:
       return [];
 
     default:

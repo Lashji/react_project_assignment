@@ -25,6 +25,8 @@ const usersReducer = (state = [], action) => {
       return [];
 
     case GET_USER:
+      return action.payload;
+    
     case GET_USERS:
       return action.payload;
 

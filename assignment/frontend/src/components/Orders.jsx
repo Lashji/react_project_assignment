@@ -23,7 +23,7 @@ const Orders = () => {
 
   return (
     <div data-testid="orders-component">
-      <ol>
+      <ol data-testid="orders-container">
         {orders?.map((i) => (
           <Order
             providedOrder={i}

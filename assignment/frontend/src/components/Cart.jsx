@@ -27,7 +27,7 @@ const Cart = () => {
 
       navigate("../login");
     } else {
-      dispatch(addOrder(cart));
+      dispatch(addOrder({ items: cart }));
     }
   };
 

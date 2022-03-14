@@ -41,18 +41,25 @@ export const validAuth = {
  */
 export const initAuth = () => {
   return async (dispatch) => {
-    const res = await axios.get("/api/check-status");
-    console.log("INIT AUTH");
-    if (res.status === 200) {
-      dispatch({
-        type: INIT_AUTH,
-        payload: res.data,
+    const res = await axios
+      .get("/api/check-status")
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch({
+            type: INIT_AUTH,
+            payload: res.data.user,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("ERROR", error.response.data.error);
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-    } else {
-      dispatch(
-        createNotification({ message: res.data.error, isSuccess: false })
-      );
-    }
   };
 };
 /**
@@ -66,25 +73,36 @@ export const initAuth = () => {
 export const logIn = (logInCreds) => {
   return async (dispatch) => {
     if (validateLogin(dispatch, logInCreds)) {
-      const res = await axios.post("/api/login", logInCreds);
+      const res = await axios
+        .post("/api/login", logInCreds)
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch({
+              type: INIT_AUTH,
+              payload: res.data.user,
+            });
 
-      if (res.status === 200) {
-        dispatch({
-          type: INIT_AUTH,
-          payload: res.data,
+            dispatch(
+              createNotification({
+                message: validAuth.welcomeBack,
+                isSuccess: true,
+              })
+            );
+          } else {
+            dispatch(
+              createNotification({ message: res.data.error, isSuccess: false })
+            );
+          }
+        })
+        .catch((error) => {
+          console.log("ERROR", error.response.data);
+          dispatch(
+            createNotification({
+              message: error.response.data.error,
+              isSuccess: false,
+            })
+          );
         });
-
-        dispatch(
-          createNotification({
-            message: validAuth.welcomeBack,
-            isSuccess: true,
-          })
-        );
-      } else {
-        dispatch(
-          createNotification({ message: res.data.error, isSuccess: false })
-        );
-      }
     }
   };
 };
@@ -130,31 +148,40 @@ export const register = (registerCreds) => {
     if (validateRegistration(dispatch, registerCreds)) {
       const { name, email, password } = registerCreds;
 
-      const res = await axios.post("/api/register", { name, email, password });
+      const res = await axios
+        .post("/api/register", { name, email, password })
+        .then((res) => {
+          console.log("register data", res.data);
 
-      if (res.status === 201) {
-        dispatch({
-          type: INIT_AUTH,
-          payload: res.data,
+          console.log("dispatching init auht");
+          dispatch({
+            type: INIT_AUTH,
+            payload: res.data.user,
+          });
+
+          dispatch(
+            createNotification({
+              message: validAuth.welcome(res.data.user.name),
+              isSuccess: true,
+            })
+          );
+        })
+        .catch((error) => {
+          dispatch(
+            createNotification({
+              message: error.response.data.error.email,
+              isSuccess: false,
+            })
+          );
         });
-
-        dispatch(
-          createNotification({
-            message: validAuth.welcome(res.data.name),
-            isSuccess: true,
-          })
-        );
-      } else {
-        createNotification(
-          dispatch({ message: res.data.error, isSuccess: false })
-        );
-      }
     }
   };
 };
 
 const validateRegistration = (dispatch, creds) => {
-  if (creds.name.length < 4) {
+  console.log("CREDS", creds);
+
+  if (creds.name && creds.name.length < 4) {
     dispatch(
       createNotification({
         message: invalidAuth.name,
@@ -170,7 +197,7 @@ const validateRegistration = (dispatch, creds) => {
     );
     return false;
   }
-  if (creds.password.length < 10) {
+  if (!creds.password || creds.password.length < 10) {
     dispatch(
       createNotification({ message: invalidAuth.password, isSuccess: false })
     );

@@ -73,8 +73,15 @@ export const getOrders = () => {
  * @return {Function} - Thunk -> action
  */
 export const addOrder = (newOrder) => {
+
+  console.log("New order", newOrder);
+
   return async (dispatch) => {
-    const res = await axios.post(`/api/orders/`, newOrder);
+    const res = await axios.post(`/api/orders/`, JSON.stringify(newOrder), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
     if (res.status === 200) {
       dispatch({

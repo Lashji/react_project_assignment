@@ -20,12 +20,23 @@ const Product = ({ providedProduct }) => {
 
   const params = useParams();
   let { productId } = params;
+  console.log("product", providedProduct, product);
 
   if (!providedProduct) {
     providedProduct = product;
   }
 
+  const modifyUrl = productId ? "modify" : `${providedProduct.id}/modify`;
+
   if (!productId) productId = providedProduct.id;
+
+  const stateProduct = useSelector((state) =>
+    state.products.find((i) => i.id === productId)
+  );
+
+  if (!providedProduct && !product) {
+    providedProduct = stateProduct;
+  }
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,13 +51,11 @@ const Product = ({ providedProduct }) => {
 
   const addToCart = () => {
     if (cart.find((i) => i.product.id === productId)) {
-      console.log("increment");
       dispatch(incrementCartItem(productId));
     } else {
       cart.find((i) =>
         console.log("searching for cart item", i.product === productId)
       );
-      console.log("add");
       dispatch(addCartItem({ product: providedProduct, quantity: 1 }));
     }
   };
@@ -77,7 +86,7 @@ const Product = ({ providedProduct }) => {
           </button>
           <button
             data-testid={`modify-button-${productId}`}
-            onClick={(e) => navigate(`${productId}/modify`)}
+            onClick={(e) => navigate(modifyUrl)}
           >
             Modify
           </button>

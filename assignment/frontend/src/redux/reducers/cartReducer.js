@@ -31,7 +31,6 @@ const cartReducer = (state = [], action) => {
       return action.payload;
 
     case REMOVE_CART_ITEM:
-      console.log("remove", action.payload);
       return [...state].filter((i) => i.product.id !== action.payload.id);
 
     case UPDATE_CART_ITEM_AMOUNT:
