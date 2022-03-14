@@ -17,7 +17,7 @@ const CartItem = ({ item }) => {
     <div data-testid="cart-item-component">
       <div data-testid="item-name">{product.name}</div>
       <div data-testid="item-price">{product.price}</div>
-      <div data-testid="item-amount">{quantity}</div>
+      <div data-testid="item-amount">quantity: {quantity}</div>
       <div className="cart-item-buttons">
         <button
           data-testid={`plus-btn-${product.id}`}

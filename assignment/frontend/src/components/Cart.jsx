@@ -25,7 +25,7 @@ const Cart = () => {
         })
       );
 
-      navigate("/login");
+      navigate("../login");
     } else {
       dispatch(addOrder(cart));
     }

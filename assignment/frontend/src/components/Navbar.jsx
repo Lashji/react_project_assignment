@@ -15,42 +15,58 @@ const AllLinks = {
  *
  */
 const Navbar = () => {
-  const role = useSelector((state) => state.auth.role);
-  console.log("ROLE in navbar", role);
+  let role = useSelector((state) => state.auth.role);
+  if (!role) role = "guest";
+  const [links, setLinks] = useState(AllLinks[role]);
 
-  // TODO: FIX NAVBAR
+  useEffect(() => {
+    setLinks(AllLinks[role]);
+  }, [role]);
 
+  console.log("ROLE ", role);
   const dispatch = useDispatch();
 
-  console.log("ALLLINKS", AllLinks);
-  let links = [];
+  let linksElements;
+
   if (AllLinks[role]) {
-    links = AllLinks[role].map((i) => {
+    linksElements = links.map((i) => {
       return (
-        <Link key={`link-${i}`} to={`/${i}`}>
+        <Link
+          key={`${i}-link`}
+          to={`${i.toLowerCase()}`}
+          data-testid={`${i.toLowerCase()}-link`}
+        >
           {i}
         </Link>
       );
     });
   }
 
+  let logoutLink = <></>;
+
   if (role !== "guest") {
-    links.push(
-      <Link to={"/"} onClick={(e) => dispatch(logOut())} key={"link-logout"}>
+    logoutLink = (
+      <Link
+        to={"/"}
+        onClick={(e) => dispatch(logOut())}
+        key={"logout-link"}
+        data-testid="logout-link"
+      >
         Logout
       </Link>
     );
   }
 
   return (
-    <div>
-      <Link to="/" key={"link-home"}>
+    <div data-testid="navbar-component">
+      <Link to="/" key={"home-link"} data-testid="home-link">
         Home
       </Link>
-      <Link to="Products" key={"link-products"}>
+      <Link to="products" key={"products-link"} data-testid="products-link">
         Products
       </Link>
-      {links}
+      {linksElements}
+      {logoutLink}
     </div>
   );
 };
