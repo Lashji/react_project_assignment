@@ -21,7 +21,7 @@ const ordersReducer = (state = [], action) => {
       return action.payload;
 
     case GET_ORDER:
-      return action.payload;
+      return [action.payload];
 
     case CLEAR_ORDERS:
       return [];
