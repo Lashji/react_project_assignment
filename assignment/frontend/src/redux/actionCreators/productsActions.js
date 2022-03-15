@@ -13,6 +13,8 @@ import {
   UPDATE_PRODUCT,
 } from "../constants";
 
+import { createNotification } from "./notificationsActions";
+
 export const productMsg = {
   added: "Product added.",
   updated: "Product updated.",
@@ -28,18 +30,24 @@ export const productMsg = {
  */
 export const getProduct = (productId) => {
   return async function (dispatch) {
-    const res = await axios.get(`/api/products/${productId}`);
+    await axios
+      .get(`/api/products/${productId}`)
+      .then((res) => {
+        const { data } = res;
 
-    const { data, status } = res;
-
-    if (status === 200) {
-      dispatch({
-        type: GET_PRODUCT,
-        payload: data,
+        dispatch({
+          type: GET_PRODUCT,
+          payload: data,
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-    } else {
-      dispatchError(dispatch, res);
-    }
   };
 };
 
@@ -49,18 +57,24 @@ export const getProduct = (productId) => {
  */
 export const getProducts = () => {
   return async (dispatch) => {
-    const res = await axios.get(`/api/products/`);
+    await axios
+      .get(`/api/products/`)
+      .then((res) => {
+        const { data } = res;
 
-    const { data, status } = res;
-
-    if (status === 200) {
-      dispatch({
-        type: GET_PRODUCTS,
-        payload: data,
+        dispatch({
+          type: GET_PRODUCTS,
+          payload: data,
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-    } else {
-      dispatchError(dispatch, res);
-    }
   };
 };
 
@@ -71,21 +85,36 @@ export const getProducts = () => {
  */
 export const addProduct = (productToAdd) => {
   return async (dispatch) => {
-    const res = await axios.post("/api/products/", productToAdd);
+    await axios
+      .post("/api/products/", productToAdd)
+      .then((res) => {
+        dispatch({
+          type: ADD_PRODUCT,
+          payload: res.data,
+        });
 
-    if (res.status === 201) {
-      dispatch({
-        type: ADD_PRODUCT,
-        payload: res.data,
+        dispatch({
+          type: NEW_NOTIFICATION,
+          payload: { message: productMsg.added, isSuccess: true },
+        });
+      })
+      .catch((error) => {
+        if (typeof error.response.data.error === "object") {
+          dispatch(
+            createNotification({
+              message: error.response.data.error.image,
+              isSuccess: false,
+            })
+          );
+        } else {
+          dispatch(
+            createNotification({
+              message: error.response.data.error,
+              isSuccess: false,
+            })
+          );
+        }
       });
-
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: productMsg.added, isSuccess: true},
-      });
-    } else {
-      dispatchError(dispatch, res);
-    }
   };
 };
 
@@ -96,21 +125,31 @@ export const addProduct = (productToAdd) => {
  */
 export const updateProduct = (productToUpdate) => {
   return async (dispatch) => {
-    const res = await axios.put("/api/products/", productToUpdate);
+    await axios
+      .put(`/api/products/${productToUpdate.id}`, productToUpdate, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        dispatch({
+          type: UPDATE_PRODUCT,
+          payload: res.data,
+        });
 
-    if (res.status === 200) {
-      dispatch({
-        type: UPDATE_PRODUCT,
-        payload: res.data,
+        dispatch({
+          type: NEW_NOTIFICATION,
+          payload: { message: productMsg.updated, isSuccess: true },
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: productMsg.updated, isSuccess: true},
-      });
-    } else {
-      dispatchError(dispatch, res);
-    }
   };
 };
 
@@ -121,27 +160,26 @@ export const updateProduct = (productToUpdate) => {
  */
 export const deleteProduct = (productId) => {
   return async (dispatch) => {
-    const res = await axios.delete(`/api/products/${productId}`);
+    await axios
+      .delete(`/api/products/${productId}`)
+      .then((res) => {
+        dispatch({
+          type: DELETE_PRODUCT,
+          payload: res.data,
+        });
 
-    if (res.status === 200) {
-      dispatch({
-        type: DELETE_PRODUCT,
-        payload: res.data,
+        dispatch({
+          type: NEW_NOTIFICATION,
+          payload: { message: productMsg.deleted(res.data), isSuccess: true },
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: productMsg.deleted(res.data), isSuccess: true},
-      });
-    } else {
-      dispatchError(dispatch, res);
-    }
   };
 };
-
-function dispatchError(dispatch, res) {
-  dispatch({
-    type: NEW_NOTIFICATION,
-    payload: {message: res.data.error, isSuccess: false},
-  });
-}

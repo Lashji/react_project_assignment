@@ -9,7 +9,7 @@ import {
   GET_ORDER,
 } from "../constants";
 import { emptyCart } from "./cartActions";
-
+import { createNotification } from "./notificationsActions";
 import axios from "axios";
 
 const orderMsg = {
@@ -23,19 +23,22 @@ const orderMsg = {
  */
 export const getOrder = (orderId) => {
   return async (dispatch) => {
-    const res = await axios.get(`/api/orders/${orderId}`);
-
-    if (res.status === 200) {
-      dispatch({
-        type: GET_ORDER,
-        payload: res.data,
+    const res = await axios
+      .get(`/api/orders/${orderId}`)
+      .then((res) => {
+        dispatch({
+          type: GET_ORDER,
+          payload: res.data,
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-    } else {
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: res.data.error, isSuccess: false},
-      });
-    }
   };
 };
 
@@ -46,19 +49,22 @@ export const getOrder = (orderId) => {
  */
 export const getOrders = () => {
   return async (dispatch) => {
-    const res = await axios.get(`/api/orders/`);
-
-    if (res.status === 200) {
-      dispatch({
-        type: GET_ORDERS,
-        payload: res.data,
+    const res = await axios
+      .get(`/api/orders/`)
+      .then((res) => {
+        dispatch({
+          type: GET_ORDERS,
+          payload: res.data,
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-    } else {
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: res.data.error, isSuccess:false},
-      });
-    }
   };
 };
 
@@ -73,33 +79,35 @@ export const getOrders = () => {
  * @return {Function} - Thunk -> action
  */
 export const addOrder = (newOrder) => {
-
   console.log("New order", newOrder);
 
   return async (dispatch) => {
-    const res = await axios.post(`/api/orders/`, JSON.stringify(newOrder), {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    const res = await axios
+      .post(`/api/orders/`, newOrder, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        dispatch(emptyCart());
 
-    if (res.status === 200) {
-      dispatch({
-        type: ADD_ORDER,
-        payload: res.data,
-      });
+        dispatch({
+          type: ADD_ORDER,
+          payload: res.data,
+        });
 
-      dispatch(emptyCart());
-
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message : orderMsg.newOrder, isSuccess : true},
+        dispatch({
+          type: NEW_NOTIFICATION,
+          payload: { message: orderMsg.newOrder, isSuccess: true },
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-    } else {
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: res.data.error, isSuccess: false},
-      });
-    }
   };
 };

@@ -10,6 +10,8 @@ import {
   UPDATE_USER,
 } from "../constants";
 
+import { createNotification } from "./notificationsActions";
+
 import axios from "axios";
 //Use these for the notifications sent.
 const userMsg = {
@@ -30,23 +32,24 @@ const userMsg = {
  */
 export const getUser = (userId) => {
   return async (dispatch) => {
-    const res = await axios.get(`/api/users/${userId}`);
+    await axios
+      .get(`/api/users/${userId}`)
+      .then((res) => {
+        console.log("users data", res.data);
 
-    if (res.status === 200) {
-      dispatch({
-        type: GET_USER,
-        payload: res.data,
+        dispatch({
+          type: GET_USER,
+          payload: res.data,
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: userMsg.gotUser, isSuccess: true},
-      });
-    } else {
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: res.data.error, isSuccess: false},
-      });
-    }
   };
 };
 /**
@@ -57,23 +60,22 @@ export const getUser = (userId) => {
  */
 export const getUsers = () => {
   return async (dispatch) => {
-    const res = await axios.get("/api/users");
-
-    if (res.status === 200) {
-      dispatch({
-        type: GET_USERS,
-        payload: res.data,
+    const res = await axios
+      .get("/api/users")
+      .then((res) => {
+        dispatch({
+          type: GET_USERS,
+          payload: res.data,
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: userMsg.gotUsers, isSuccess: true},
-      });
-    } else {
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: res.data.error, isSuccess: false},
-      });
-    }
   };
 };
 /**
@@ -85,24 +87,29 @@ export const getUsers = () => {
  */
 export const updateUser = (updatedUser) => {
   return async (dispatch) => {
-    const res = await axios.put(`/api/users/${updateUser.id}`, updatedUser);
+    await axios
+      .put(`/api/users/${updatedUser.id}`, updatedUser)
+      .then((res) => {
+        dispatch({
+          type: UPDATE_USER,
+          payload: res.data,
+        });
 
-    if (res.status === 200) {
-      dispatch({
-        type: UPDATE_USER,
-        payload: res.data,
+        dispatch(
+          createNotification({
+            message: userMsg.updateUser,
+            isSuccess: true,
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: userMsg.updateUser, isSuccess: true},
-      });
-    } else {
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: res.data.error, isSuccess: false},
-      });
-    }
   };
 };
 /**
@@ -114,22 +121,25 @@ export const updateUser = (updatedUser) => {
  */
 export const removeUser = (userId) => {
   return async (dispatch) => {
-    const res = await axios.delete(`/api/users/${userId}`);
-
-    if (res.status === 200) {
-      dispatch({
-        type: REMOVE_USER,
-        payload: res.data,
+    await axios
+      .delete(`/api/users/${userId}`)
+      .then((res) => {
+        dispatch({
+          type: REMOVE_USER,
+          payload: res.data,
+        });
+        dispatch({
+          type: NEW_NOTIFICATION,
+          payload: { message: userMsg.delete(res.data), isSuccess: true },
+        });
+      })
+      .catch((error) => {
+        dispatch(
+          createNotification({
+            message: error.response.data.error,
+            isSuccess: false,
+          })
+        );
       });
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: userMsg.delete(res.data), isSuccess: true},
-      });
-    } else {
-      dispatch({
-        type: NEW_NOTIFICATION,
-        payload: {message: res.data.error, isSuccess: false},
-      });
-    }
   };
 };
