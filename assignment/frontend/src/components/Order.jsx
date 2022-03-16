@@ -16,22 +16,27 @@ const Order = ({ providedOrder }) => {
   }
 
   const orderItems = providedOrder.items.map((i) => {
+    const { product, quantity } = i;
     return (
-      <li data-testid="order-listitem">
-        <h4 data-testid="name-heading">{i.name}</h4>
-        <div data-testid="price-element">{i.price}</div>
-        <div data-testid="description-element">{i.description}</div>
-        <div data-testid="quantity-element">{i.quantity}</div>
+      <li key={`orderItem-${product.id}`} data-testid="order-listitem">
+        <h2 data-testid="name-heading">{product.name}</h2>
+        <div data-testid="price-element">{product.price}</div>
+        <div data-testid="description-element">{product.description}</div>
+        <h2 data-testid="quantity-element">{quantity}</h2>
       </li>
     );
   });
+  let inspectLink = (
+    <Link data-testid="inspect-link" to={`${providedOrder.id}`} />
+  );
 
+  if (orderId) inspectLink = <></>;
   return (
     <div data-testid="order-component">
-      <div data-testid="order-id">{orderId}</div>
-      <div data-testid="order-customer-id">{providedOrder.customerId}</div>
-      <Link data-testid="inspect-link" to={`./orders/${orderId}`} />
-      <ol>{orderItems}</ol>
+      <div data-testid="orderId-heading">{orderId}</div>
+      <div data-testid="customerId-heading">{providedOrder.customerId}</div>
+      {inspectLink}
+      <ol data-testid="order-list">{orderItems}</ol>
     </div>
   );
 };
