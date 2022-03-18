@@ -36,7 +36,7 @@ const Navbar = () => {
           to={`${i.toLowerCase()}`}
           data-testid={`${i.toLowerCase()}-link`}
         >
-          {i}
+          {i.toLowerCase()}
         </Link>
       );
     });
@@ -52,7 +52,7 @@ const Navbar = () => {
         key={"logout-link"}
         data-testid="logout-link"
       >
-        Logout
+        logout
       </Link>
     );
   }
@@ -60,10 +60,10 @@ const Navbar = () => {
   return (
     <div data-testid="navbar-component">
       <Link to="/" key={"home-link"} data-testid="home-link">
-        Home
+        home
       </Link>
       <Link to="products" key={"products-link"} data-testid="products-link">
-        Products
+        products
       </Link>
       {linksElements}
       {logoutLink}

@@ -60,7 +60,7 @@ export const getUser = (userId) => {
  */
 export const getUsers = () => {
   return async (dispatch) => {
-    const res = await axios
+    await axios
       .get("/api/users")
       .then((res) => {
         dispatch({

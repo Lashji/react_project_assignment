@@ -20,7 +20,6 @@ const Product = ({ providedProduct }) => {
 
   const params = useParams();
   let { productId } = params;
-  console.log("product", providedProduct, product);
 
   if (!providedProduct) {
     providedProduct = product;

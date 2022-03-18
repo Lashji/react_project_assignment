@@ -10,7 +10,6 @@ import {
 
 const CartItem = ({ item }) => {
   const dispatch = useDispatch();
-  console.log("cartitem", item);
 
   const { product, quantity } = item;
   return (

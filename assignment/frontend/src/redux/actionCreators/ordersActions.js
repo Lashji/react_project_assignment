@@ -23,7 +23,7 @@ const orderMsg = {
  */
 export const getOrder = (orderId) => {
   return async (dispatch) => {
-    const res = await axios
+   await axios
       .get(`/api/orders/${orderId}`)
       .then((res) => {
         dispatch({
@@ -49,7 +49,7 @@ export const getOrder = (orderId) => {
  */
 export const getOrders = () => {
   return async (dispatch) => {
-    const res = await axios
+    await axios
       .get(`/api/orders/`)
       .then((res) => {
         dispatch({
@@ -82,7 +82,7 @@ export const addOrder = (newOrder) => {
   console.log("New order", newOrder);
 
   return async (dispatch) => {
-    const res = await axios
+    await axios
       .post(`/api/orders/`, newOrder, {
         headers: {
           "Content-Type": "application/json",

@@ -37,10 +37,28 @@ const App = () => {
       <Notification />
       <Routes>
         <Route path="/" element={<Home />}></Route>
-        <Route path="/products" element={<Products />}></Route>
+        <Route path="products" element={<Products />}>
+          <Route element={<Auth authRoles={["admin"]} />}>
+            <Route element={<Finder type="product" findHandler={getProduct} />}>
+              <Route path=":productId" element={<Product />}>
+                <Route
+                  element={
+                    <Finder type={"product"} findHandler={getProduct}></Finder>
+                  }
+                >
+                  <Route path="modify" element={<ProductModifier />}></Route>
+                </Route>
+              </Route>
+            </Route>
+          </Route>
+        </Route>
 
-        <Route element={<Finder type="product" findHandler={getProduct} />}>
-          <Route path="/products/:productId" element={<Product />}></Route>
+        <Route element={<Auth authRoles={["guest"]} />}>
+          <Route path="register" element={<Register />}></Route>
+        </Route>
+
+        <Route element={<Auth authRoles={["guest"]} />}>
+          <Route path="login" element={<Login />}></Route>
         </Route>
 
         <Route element={<Auth authRoles={["guest", "customer"]} />}>
@@ -48,43 +66,27 @@ const App = () => {
         </Route>
 
         <Route element={<Auth authRoles={["admin"]} />}>
-          <Route path="/users" element={<Users />}></Route>
+          <Route path="users" element={<Users />}></Route>
           <Route
             element={<Finder type={"user"} findHandler={getUser}></Finder>}
           >
-            <Route path="/users/:userId" element={<User />}></Route>
+            <Route path=":userId" element={<User />}></Route>
           </Route>
           <Route element={<Finder type={"user"} findHandler={getUser} />}>
-            <Route
-              path="/users/:userId/modify"
-              element={<UserModifier />}
-            ></Route>
-          </Route>
-          <Route
-            element={
-              <Finder type={"product"} findHandler={getProduct}></Finder>
-            }
-          >
-            <Route
-              path="/products/:productId/modify"
-              element={<ProductModifier />}
-            ></Route>
+            <Route path="modify" element={<UserModifier />}></Route>
           </Route>
         </Route>
 
         <Route element={<Auth authRoles={["customer", "admin"]} />}>
-          <Route path="/orders" element={<Orders />}></Route>
-          <Route
-            element={<Finder type={"order"} findHandler={getOrder}></Finder>}
-          >
-            <Route path="/orders/:orderId" element={<Order />}></Route>
+          <Route path="orders" element={<Orders />}>
+            <Route
+              element={<Finder type={"order"} findHandler={getOrder}></Finder>}
+            >
+              <Route path=":orderId" element={<Order />}></Route>
+            </Route>
           </Route>
         </Route>
 
-        <Route element={<Auth authRoles={["guest"]} />}>
-          <Route path="/register" element={<Register />}></Route>
-          <Route path="/login" element={<Login />}></Route>
-        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

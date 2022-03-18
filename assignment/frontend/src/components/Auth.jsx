@@ -3,26 +3,25 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { Outlet } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { Outlet, useParams, Navigate } from "react-router-dom";
+import {} from "react-router-dom";
 
 const Auth = ({ authRoles }) => {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const auth = useSelector((state) => {
-    console.log("auth: ", state.auth);
     return state.auth;
   });
 
-  useEffect(() => {
-    if (!authRoles.includes(auth.role) && auth.role === "guest")
-      navigate("/login");
-    else if (!authRoles.includes(auth.role)) navigate("/");
-  });
-
-  console.log("auth params id", id);
-
+  if (!authRoles.includes("guest") && auth.role === "guest")
+    return <Navigate to="/login" />;
+  else if (
+    (!authRoles.includes("admin") && auth.role === "admin") ||
+    (!authRoles.includes("customer") && auth.role === "customer")
+  )
+    return <Navigate to="/" />;
+  else if (!auth.role) return <></>;
   return (
     <div data-testid="auth-success-component">
       <Outlet />

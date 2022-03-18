@@ -49,8 +49,6 @@ const Products = () => {
     </ol>
   );
 
-  console.log("products", products);
-
   return (
     <div data-testid="products-component">
       {roleBasedComponent()}

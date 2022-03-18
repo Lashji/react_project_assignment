@@ -38,7 +38,7 @@ const UserModifier = () => {
         <option value="admin">admin</option>
       </select>
       <button
-        disabled={role == user.role}
+        disabled={role === user.role}
         data-testid="update-button"
         type="submit"
       >

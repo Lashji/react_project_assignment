@@ -4,7 +4,6 @@ import {
   CLEAR_ORDERS,
   CLEAR_USERS,
   INIT_AUTH,
-  NEW_NOTIFICATION,
   REMOVE_AUTH,
 } from "../constants";
 import { createNotification } from "./notificationsActions";
@@ -41,7 +40,7 @@ export const validAuth = {
  */
 export const initAuth = () => {
   return async (dispatch) => {
-    const res = await axios
+    await axios
       .get("/api/check-status")
       .then((res) => {
         if (res.status === 200) {
@@ -73,7 +72,7 @@ export const initAuth = () => {
 export const logIn = (logInCreds) => {
   return async (dispatch) => {
     if (validateLogin(dispatch, logInCreds)) {
-      const res = await axios
+      await axios
         .post("/api/login", logInCreds)
         .then((res) => {
           if (res.status === 200) {
@@ -148,7 +147,7 @@ export const register = (registerCreds) => {
     if (validateRegistration(dispatch, registerCreds)) {
       const { name, email, password } = registerCreds;
 
-      const res = await axios
+      await axios
         .post("/api/register", { name, email, password })
         .then((res) => {
           console.log("register data", res.data);

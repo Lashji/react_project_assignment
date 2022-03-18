@@ -54,8 +54,12 @@ const testNavigationIsCorrect = (role = 'guest') => {
 };
 
 const navigateToPage = (pageName) => {
+
 	userEvent.click(screen.getByTestId(`${pageName}-link`));
-	if (pageName === 'home') pageName = '';
+	if (pageName === 'home') {
+		pageName = '';
+	}
+
 	expect(history.location.pathname).toEqual(`/${pageName}`);
 };
 

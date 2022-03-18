@@ -14,8 +14,6 @@ const Cart = () => {
   const { role } = useSelector((state) => state.auth);
   const cart = useSelector((state) => state.cart);
 
-  console.log("cart", cart);
-
   const handleOrder = () => {
     if (role === "guest") {
       dispatch(
@@ -48,7 +46,12 @@ const Cart = () => {
     content = emptyCartElement;
   }
 
-  return <div data-testid="cart-component">{content}</div>;
+  return (
+    <div data-testid="cart-component">
+      <h2>Cart</h2>
+      {content}
+    </div>
+  );
 };
 
 export default Cart;
