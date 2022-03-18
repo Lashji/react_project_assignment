@@ -36,7 +36,9 @@ const App = () => {
       <Navbar />
       <Notification />
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route path="/" index element={<Home />}></Route>
+        <Route path="*" element={<NotFound />}></Route>
+
         <Route path="products" element={<Products />}>
           <Route element={<Auth authRoles={["admin"]} />}>
             <Route element={<Finder type="product" findHandler={getProduct} />}>
@@ -62,18 +64,20 @@ const App = () => {
         </Route>
 
         <Route element={<Auth authRoles={["guest", "customer"]} />}>
-          <Route path="/cart" element={<Cart />} />
+          <Route path="cart" element={<Cart />} />
         </Route>
 
         <Route element={<Auth authRoles={["admin"]} />}>
-          <Route path="users" element={<Users />}></Route>
-          <Route
-            element={<Finder type={"user"} findHandler={getUser}></Finder>}
-          >
-            <Route path=":userId" element={<User />}></Route>
-          </Route>
-          <Route element={<Finder type={"user"} findHandler={getUser} />}>
-            <Route path="modify" element={<UserModifier />}></Route>
+          <Route path="users" element={<Users />}>
+            <Route
+              element={<Finder type={"user"} findHandler={getUser}></Finder>}
+            >
+              <Route path=":userId" element={<User />}>
+                <Route element={<Finder type={"user"} findHandler={getUser} />}>
+                  <Route path="modify" element={<UserModifier />}></Route>
+                </Route>
+              </Route>
+            </Route>
           </Route>
         </Route>
 
@@ -86,8 +90,6 @@ const App = () => {
             </Route>
           </Route>
         </Route>
-
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
