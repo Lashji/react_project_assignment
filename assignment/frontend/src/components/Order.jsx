@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 const Order = ({ providedOrder }) => {
-  const { orderId } = useParams();
+  let { orderId } = useParams();
 
   const order = useSelector((state) => {
     return state.orders.find((i) => i.id === orderId);
@@ -31,10 +31,12 @@ const Order = ({ providedOrder }) => {
       Inspect
     </Link>
   );
-
   if (orderId) {
     inspectLink = <></>;
+  } else {
+    orderId = providedOrder.id;
   }
+
   return (
     <div data-testid="order-component">
       <div data-testid="orderId-heading">{orderId}</div>

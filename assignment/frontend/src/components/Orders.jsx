@@ -7,6 +7,9 @@ import Order from "./Order";
 
 const Orders = () => {
   const dispatch = useDispatch();
+
+  const auth = useSelector((state) => state.auth);
+  console.log(auth);
   const orders = useSelector((state) => {
     return state.orders;
   });
@@ -21,10 +24,25 @@ const Orders = () => {
     return <div data-testid="no-order-component"></div>;
   }
 
+  let filteredOrders = orders.filter((i) => {
+    if (auth.role === "customer") {
+      console.log("AUth is customer");
+      return i.customerId === auth.id;
+    } else if (auth.role === "admin") {
+      console.log("AUth is admin");
+
+      return true;
+    } else {
+      console.log("AUth is else");
+
+      return false;
+    }
+  });
+
   return (
     <div data-testid="orders-component">
       <ol data-testid="orders-container">
-        {orders?.map((i) => (
+        {filteredOrders?.map((i) => (
           <Order
             providedOrder={i}
             key={`order-${i.id}`}

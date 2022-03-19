@@ -23,7 +23,6 @@ const Navbar = () => {
     setLinks(AllLinks[role]);
   }, [role]);
 
-  console.log("ROLE ", role);
   const dispatch = useDispatch();
 
   let linksElements;
