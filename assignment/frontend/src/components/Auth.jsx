@@ -6,6 +6,12 @@ import { useNavigate } from "react-router";
 import { Outlet, useParams, Navigate } from "react-router-dom";
 import {} from "react-router-dom";
 
+/**
+ *
+ *
+ * @param {object} { authRoles }
+ * @return {*} - JSX template
+ */
 const Auth = ({ authRoles }) => {
   const navigate = useNavigate();
   const { id } = useParams();

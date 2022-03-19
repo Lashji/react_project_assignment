@@ -24,7 +24,7 @@ const Orders = () => {
     return <div data-testid="no-order-component"></div>;
   }
 
-  let filteredOrders = orders.filter((i) => {
+  const filteredOrders = orders.filter((i) => {
     if (auth.role === "customer") {
       console.log("AUth is customer");
       return i.customerId === auth.id;
