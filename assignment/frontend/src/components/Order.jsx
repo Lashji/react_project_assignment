@@ -32,7 +32,9 @@ const Order = ({ providedOrder }) => {
     </Link>
   );
 
-  if (orderId) inspectLink = <></>;
+  if (orderId) {
+    inspectLink = <></>;
+  }
   return (
     <div data-testid="order-component">
       <div data-testid="orderId-heading">{orderId}</div>

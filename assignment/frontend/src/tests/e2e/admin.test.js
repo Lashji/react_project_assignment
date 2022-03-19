@@ -55,8 +55,11 @@ const testNavigationIsCorrect = (role = 'guest') => {
 
 const navigateToPage = (pageName) => {
 
+	console.log("pagename ", pageName);
+
 	userEvent.click(screen.getByTestId(`${pageName}-link`));
 	if (pageName === 'home') {
+		console.log("PAGENAME === HOME");	
 		pageName = '';
 	}
 
@@ -200,9 +203,6 @@ describe('END-TO-END - ADMIN', () => {
 			render(ui);
 			await expectComponent('app');
 			testNavigationIsCorrect('guest');
-
-			console.log("TESTING LOGIN");
-
 			await login(credentials.admin);
 			testNavigationIsCorrect('admin');
 			navigateToPage('orders');
