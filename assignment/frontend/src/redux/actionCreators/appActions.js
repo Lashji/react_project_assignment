@@ -5,7 +5,7 @@ import { initCart } from './cartActions';
 
 /**
  * @description Action creator that initiates the app.  Dispatches initCart-action and initAuth-action.
- * @return {Function} thunk
+ * @returns {Function} thunk
  */
 export const initApp = () => {
 	return (dispatch) => {

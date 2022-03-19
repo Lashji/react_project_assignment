@@ -35,7 +35,6 @@ export const validAuth = {
  * @description Asynchronous thunk that uses backends /api/check-status path to check whether or not there is the correct browser-cookie and whether or not that browser-cookie is valid. If it's succesful, Dispatches
  * 1) INIT_AUTH with user as payload.
  * If the response is not ok, it only dispatches a NEW_NOTIFICATION-type action to the frontends notification state along with the error message from db as an unsuccessfull message.
- *
  * @returns {Function} Thunk
  */
 export const initAuth = () => {
@@ -66,7 +65,7 @@ export const initAuth = () => {
  * 1) INIT_AUTH with user as payload
  * 2) succesfull notification with validAuth.welcomeBack as message.
  * If the response is not ok, it only dispatches a NEW_NOTIFICATION-type action to the frontends notification state along with the error message from db as an unsuccessfull notification.
- * @param {Object} logInCreds - The credentials used to login, contains username and password
+ * @param {object} logInCreds - The credentials used to login, contains username and password
  * @returns {Function} action
  */
 export const logIn = (logInCreds) => {
@@ -113,7 +112,7 @@ export const logIn = (logInCreds) => {
  * 2) CLEAR_ORDERS and
  * 3) CLEAR_USERS as well as
  * 4) NEW_NOTIFICATION with succesfull message from the backend as payload to the reducers.
- * @returns {Function}
+ * @returns {Function} logout-function
  */
 export const logOut = () => {
   return async (dispatch) => {
@@ -139,8 +138,8 @@ export const logOut = () => {
  * 1) an INIT_AUTH-type action to reducers with the received user as payload.
  * 2) a successful NEW_NOTIFICATION-type action to reducers with validAuth.welcome(name) as message.
  * If the response is not ok, it only dispatches a NEW_NOTIFICATION-type action to the frontends notification state along with the error message from db as an unsuccessfull notification. If the error itself is an object, then it should pass whatever is inside the object.
- * @param registerCreds - The data of the user
- * @returns {Function}
+ * @param {object} registerCreds  - The data of the user
+ * @returns {Function} - Register function
  */
 export const register = (registerCreds) => {
   return async (dispatch) => {
