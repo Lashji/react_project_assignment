@@ -20,7 +20,6 @@ const Notification = () => {
   }, []);
 
   let notificationElement = <div data-testid="no-notification-component"></div>;
-  console.log("Notification ", notification);
   if (Object.keys(notification).length > 0) {
     notificationElement = (
       <div

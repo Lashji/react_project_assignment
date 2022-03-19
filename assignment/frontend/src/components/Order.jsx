@@ -27,7 +27,9 @@ const Order = ({ providedOrder }) => {
     );
   });
   let inspectLink = (
-    <Link data-testid="inspect-link" to={`${providedOrder.id}`} />
+    <Link data-testid="inspect-link" to={`${providedOrder.id}`}>
+      Inspect
+    </Link>
   );
 
   if (orderId) inspectLink = <></>;

@@ -82,13 +82,31 @@ export const addOrder = (newOrder) => {
   console.log("New order", newOrder);
 
   return async (dispatch) => {
+
+    console.log("new  oRder", newOrder);
+
+
+    const order = {
+      items: newOrder.items.map(i => {
+        console.log(i);
+        
+        delete i.product.image
+
+        return i
+
+      })
+    }
+
     await axios
-      .post(`/api/orders/`, newOrder, {
+      .post(`/api/orders/`, order, {
         headers: {
           "Content-Type": "application/json",
+          "Accept": 'application/json'
         },
+      
       })
       .then((res) => {
+
         dispatch(emptyCart());
 
         dispatch({

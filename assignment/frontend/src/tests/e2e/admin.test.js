@@ -200,6 +200,9 @@ describe('END-TO-END - ADMIN', () => {
 			render(ui);
 			await expectComponent('app');
 			testNavigationIsCorrect('guest');
+
+			console.log("TESTING LOGIN");
+
 			await login(credentials.admin);
 			testNavigationIsCorrect('admin');
 			navigateToPage('orders');
